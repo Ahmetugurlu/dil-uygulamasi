@@ -1,3 +1,9 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
 <title>ANETİL Harf Macerası</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,6 +52,12 @@ button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
 .isle.locked .blob{filter:grayscale(1) brightness(1.05);opacity:.75}
 .isle.locked .name{color:var(--ink-soft)}
 .isle .lockico{position:absolute;top:58px;right:30px;font-size:28px}
+.isle .resume{position:absolute;top:-6px;right:14px;background:var(--coral);color:#fff;font-weight:800;font-size:14px;border-radius:999px;padding:2px 10px;box-shadow:0 3px 0 #c9553a}
+.backup{margin-top:20px;display:flex;flex-direction:column;gap:8px;text-align:left;background:#fff;border:3px solid var(--line);border-radius:18px;padding:12px}
+.backup span{font-size:15px;color:var(--ink-soft);font-weight:600;line-height:1.3}
+.backup textarea,.backup input{font:600 14px/1.3 ui-monospace,Menlo,monospace;border:2px solid var(--line);border-radius:10px;padding:8px;width:100%;box-sizing:border-box;resize:none;color:var(--ink);background:var(--card);user-select:text;-webkit-user-select:text}
+.backup .go{font-size:18px;padding:8px 18px}
+#codeMsg{font-size:15px;font-weight:700;color:var(--ok);min-height:1em}
 .isle.next .blob{animation:bob 1.6s ease-in-out infinite}
 .isle .here{position:absolute;top:-34px;left:8px;font-size:40px;animation:hop 1.6s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-8px)}}
@@ -105,7 +117,7 @@ button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
 .claps span{display:inline-block;animation:pop .3s}
 
 /* result + album */
-.over{position:fixed;inset:0;background:rgba(20,40,60,.55);display:grid;place-items:center;padding:20px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));z-index:20}
+.over{position:fixed;inset:0;overflow-y:auto;align-items:safe center;background:rgba(20,40,60,.55);display:grid;place-items:center;padding:20px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));z-index:20}
 .card-big{background:var(--card);border-radius:30px;padding:24px 20px;max-width:420px;width:100%;text-align:center;box-shadow:0 10px 0 rgba(0,0,0,.2);box-sizing:border-box}
 .card-big h2{margin:0;font-size:34px;line-height:1.1}
 .bigstars{font-size:62px;letter-spacing:6px;margin:8px 0;color:var(--sun);text-shadow:0 4px 0 #d79a12}
@@ -127,6 +139,8 @@ button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
+</head>
+<body>
 <div class="app">
   <header class="top">
     <div class="brand"><span class="fox" aria-hidden="true">🦊</span><h1>ANETİL Harf Macerası<small>Tan ile ses ve hece avı</small></h1></div>
@@ -207,6 +221,12 @@ const KEY = 'anetil-macera-v1';
 let save = {stars:{}, plays:{}, stickers:[], sound:true};
 try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) save = Object.assign(save, s); } catch(e){}
 const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(save)); } catch(e){} };
+// Tarayıcıdan kaydı kendiliğinden silmemesini iste (destekleyen tarayıcılarda).
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch(e){}
+// Yedek kodu: yıldızlar + stickerlar, başka cihaza veya temizlenen tarayıcıya taşımak için.
+function makeCode(){ const d={s:save.stars,p:save.plays,k:save.stickers.map(x=>ALL_STICKERS.indexOf(x)).filter(x=>x>=0)}; return 'TAN-'+btoa(JSON.stringify(d)); }
+function readCode(c){ try { const d=JSON.parse(atob(String(c).trim().replace(/^TAN-/i,''))); if(!d||typeof d.s!=='object'||!Array.isArray(d.k)) return null;
+  return {stars:d.s, plays:d.p||{}, stickers:d.k.map(i=>ALL_STICKERS[i]).filter(Boolean)}; } catch(e){ return null; } }
 
 /* ---------- ses ---------- */
 let trVoice = null;
@@ -300,7 +320,7 @@ function renderMap(){
     b.style.left=pts[i][0]+'%'; b.style.top=pts[i][1]+'px';
     b.innerHTML = `<span class="blob">${isl.icon}</span><span class="name">${isl.name}</span>`+
       `<span class="st">${lock?'':[0,1,2].map(k=>`<span class="${k<s?'':'off'}">★</span>`).join('')}</span>`+
-      (lock?'<span class="lockico">🔒</span>':'')+(i===nextIdx?'<span class="here" aria-hidden="true">🦊</span>':'');
+      (lock?'<span class="lockico">🔒</span>':'')+(i===nextIdx?'<span class="here" aria-hidden="true">🦊</span>':'')+(save.cur&&save.cur.level===i?'<span class="resume">▶ Devam</span>':'');
     b.setAttribute('aria-label', isl.name + (lock?' (kilitli)':''));
     b.onclick = () => { if (lock){ tone([300,240]); say('Önce önceki adayı bitir!'); b.animate([{transform:'translate(-50%,-50%) rotate(-4deg)'},{transform:'translate(-50%,-50%) rotate(4deg)'},{transform:'translate(-50%,-50%)'}],{duration:300}); } else startLevel(i); };
     m.append(b);
@@ -310,7 +330,12 @@ function renderMap(){
 /* ---------- oyun ---------- */
 let G_level=0, round=[], qi=0, mistakes=0, busy=false, replay=()=>{};
 function show(id){ ['mapScreen','playScreen'].forEach(s=>$('#'+s).hidden = s!==id); window.scrollTo(0,0); }
-function startLevel(i){ G_level=i; round=buildRound(ISLANDS[i].plan); qi=0; mistakes=0; show('playScreen'); nextQ(); }
+function startLevel(i, fresh){
+  G_level=i; const c=save.cur;
+  if (!fresh && c && c.level===i && Array.isArray(c.round) && c.qi<c.round.length){ round=c.round; qi=c.qi; mistakes=c.mistakes||0; }
+  else { round=buildRound(ISLANDS[i].plan); qi=0; mistakes=0; }
+  show('playScreen'); nextQ();
+}
 function renderSteps(){ const s=$('#steps'); s.innerHTML=''; round.forEach((_,k)=>s.append(el('span',k<qi?'done':k===qi?'now':'',k<qi?'🐾':''))); }
 function praise(){ busy=true; tone([523,659,784,1046]); burst(); say(rnd(PRAISE), .95); setTimeout(()=>{ qi++; qi<round.length?nextQ():finish(); }, 1500); }
 function oops(b, keep){ mistakes++; tone([330,262],.13); if(b && keep){ b.animate([{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'none'}],{duration:300}); } else if(b){ b.classList.add('nope'); b.disabled=true; } say(rnd(TRY), .95); }
@@ -323,6 +348,7 @@ const cased = (ch,big) => big ? up(ch) : ch;
 
 function nextQ(){
   busy=false; renderSteps();
+  save.cur={level:G_level, round, qi, mistakes}; persist();
   const q=round[qi], st=$('#stage'); st.innerHTML='';
   const speakAfter = (prompt, parts) => { replay=()=>say(parts); $('#bubble').textContent=prompt; say([prompt, ...parts]); };
   $('#listenBtn').hidden=false;
@@ -413,6 +439,7 @@ function nextQ(){
 function finish(){
   const i=G_level, stars = mistakes<=1?3:mistakes<=4?2:1;
   const first = !save.plays[i];
+  delete save.cur;
   save.plays[i]=(save.plays[i]||0)+1;
   save.stars[i]=Math.max(save.stars[i]||0, stars);
   let sticker=null;
@@ -432,7 +459,7 @@ function finish(){
   tone([523,659,784,1046,1318],.13); burst(); burst();
   say([msg, ...(sticker?['Yeni bir sticker kazandın!']:[])], .9);
   $('#toMap').onclick=()=>{ $('#overlay').innerHTML=''; show('mapScreen'); renderMap(); };
-  $('#again').onclick=()=>{ $('#overlay').innerHTML=''; startLevel(i); };
+  $('#again').onclick=()=>{ $('#overlay').innerHTML=''; startLevel(i, true); };
 }
 
 /* ---------- albüm ---------- */
@@ -442,9 +469,22 @@ function openAlbum(){
     <h2>Sticker Albümüm</h2><p>${have.length} / ${ALL_STICKERS.length} sticker topladın. Her bitirdiğin ada yeni bir tane verir!</p>
     <div class="album">${ALL_STICKERS.map(s=>have.includes(s)?`<div>${s}</div>`:'<div class="empty">?</div>').join('')}</div>
     <div class="btnrow" style="margin-top:18px"><button class="go" id="closeAlbum">Kapat</button></div>
+    <div class="backup"><b>Anne-baba için yedek kodu</b><span>İlerleme bu cihazda kendiliğinden kaydedilir. Tarayıcı temizlenirse ya da başka cihaza geçerseniz bu kodla geri yükleyin.</span>
+      <textarea id="codeOut" readonly rows="2"></textarea><button class="go" id="copyCode">Kodu kopyala</button>
+      <input id="codeIn" placeholder="Yedek kodunu buraya yapıştır" autocomplete="off"><button class="go alt" id="loadCode">Kodu yükle</button><div id="codeMsg" role="status"></div></div>
     <button class="reset" id="resetBtn">Baştan başla</button><div id="confirmBox"></div>
   </div></div>`;
   $('#closeAlbum').onclick=()=>{ $('#overlay').innerHTML=''; };
+  $('#codeOut').value=makeCode();
+  $('#copyCode').onclick=()=>{ const t=$('#codeOut'); const done=()=>$('#codeMsg').textContent='Kopyalandı. Bir yere not edin.';
+    try { navigator.clipboard.writeText(t.value).then(done,()=>{ t.select(); $('#codeMsg').textContent='Kod seçildi, kopyalayın.'; }); } catch(e){ t.select(); } };
+  $('#loadCode').onclick=()=>{ const d=readCode($('#codeIn').value);
+    if(!d){ $('#codeMsg').textContent='Bu kod okunamadı. TAN- ile başlayan kodun tamamını yapıştırın.'; return; }
+    // Kayıp olmasın: mevcut ilerlemeyle birleştir, her adada en iyi yıldız kalsın.
+    Object.entries(d.stars).forEach(([k,v])=>save.stars[k]=Math.max(save.stars[k]||0,v));
+    Object.entries(d.plays).forEach(([k,v])=>save.plays[k]=Math.max(save.plays[k]||0,v));
+    d.stickers.forEach(x=>{ if(!save.stickers.includes(x)) save.stickers.push(x); });
+    persist(); renderMap(); openAlbum(); $('#codeMsg').textContent='İlerleme geri yüklendi!'; };
   $('#resetBtn').onclick=()=>{ $('#confirmBox').innerHTML='<div class="confirm">Tüm yıldızlar ve stickerlar silinsin mi? <button class="go alt" id="yes">Evet</button><button class="go" id="no">Hayır</button></div>';
     $('#yes').onclick=()=>{ save={stars:{},plays:{},stickers:[],sound:save.sound}; persist(); $('#overlay').innerHTML=''; show('mapScreen'); renderMap(); };
     $('#no').onclick=()=>{ $('#confirmBox').innerHTML=''; }; };
@@ -466,3 +506,5 @@ $('#albumBtn').onclick=openAlbum;
 $('#soundBtn').onclick=()=>{ save.sound=!save.sound; persist(); renderHeader(); if(!save.sound) try{speechSynthesis.cancel();}catch(e){} else say('Ses açık!'); };
 renderMap();
 </script>
+</body>
+</html>
