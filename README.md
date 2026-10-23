@@ -2,12 +2,14 @@
 
 7 yaşındaki 1. sınıf öğrencileri için A, N, E, T, İ, L harfleriyle oyunlaştırılmış okuma uygulaması. MEB ses temelli okuma sırasına uygun; ses-harf birleştirme ve heceleme alıştırmaları içerir.
 
-- 7 ada: Ses Adası, Hece Köprüsü, Kelime Ormanı, Hece Şelalesi, Eksik Harf Mağarası, Cümle Kalesi, Hazine Adası
-- Her adada yıldız ve çıkartma toplanır (24 çıkartmalık albüm)
+- 12 ada (sakin ve hareketli oyunlar dönüşümlü): Ses Adası, Harf İzleme Tepesi, Hece Köprüsü, Balon Şenliği, Boyama Bahçesi, Kelime Ormanı, Hece Şelalesi, Eşleştirme Koyu, Eksik Harf Mağarası, Hece Balonları, Cümle Kalesi, Hazine Adası
+- Parmakla harf izleme, gizli resim boyama, sürükle-bırak ve harf/hece balonu patlatma
+- Övgüler çocuğun adıyla (`CHILD` sabiti, şu an Sezen Lina)
+- Her adada yıldız ve çıkartma toplanır (32 çıkartmalık albüm)
 - Rehber karakter: Tan (tilki)
 
 ## Kullanım
 
-`index.html` dosyasını tarayıcıda açmak yeterli. Sesler tarayıcının Türkçe (tr-TR) konuşma özelliğiyle okunur. İlerleme cihazda saklanır.
+`index.html` dosyasını tarayıcıda açmak yeterli. Sesler tarayıcının Türkçe (tr-TR) konuşma özelliğiyle okunur. İlerleme her sorudan sonra cihazda saklanır; albümdeki yedek koduyla başka cihaza taşınabilir.
 
 Çevrimiçi sürüm: https://claude.ai/artifact/S4cNztdy1rSpqMiQL3F8DJ
