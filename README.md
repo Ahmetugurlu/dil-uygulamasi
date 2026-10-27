@@ -1,6 +1,6 @@
 # ANETİL Harf Macerası
 
-7 yaşındaki 1. sınıf öğrencileri için A, N, E, T, İ, L harfleriyle oyunlaştırılmış okuma uygulaması. MEB ses temelli okuma sırasına uygun; ses-harf birleştirme ve heceleme alıştırmaları içerir.
+7 yaşındaki 1. sınıf öğrencileri için A, N, E, T, İ, L, O harfleriyle oyunlaştırılmış okuma uygulaması. MEB ses temelli okuma sırasına uygun; ses-harf birleştirme ve heceleme alıştırmaları içerir.
 
 - 12 ada (sakin ve hareketli oyunlar dönüşümlü): Ses Adası, Harf İzleme Tepesi, Hece Köprüsü, Balon Şenliği, Boyama Bahçesi, Kelime Ormanı, Hece Şelalesi, Eşleştirme Koyu, Eksik Harf Mağarası, Hece Balonları, Cümle Kalesi, Hazine Adası
 - Parmakla harf izleme, gizli resim boyama, sürükle-bırak ve harf/hece balonu patlatma

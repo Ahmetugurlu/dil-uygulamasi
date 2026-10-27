@@ -90,8 +90,8 @@ button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
 .choice.right{background:var(--ok);border-color:var(--ok);color:#fff;box-shadow:0 6px 0 #2b8442}
 .choice.nope{background:var(--soft-no);border-color:var(--soft-no);opacity:.55;animation:shake .4s}
 @keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-.letterwall{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%;max-width:420px}
-.letterwall .choice{width:100%;display:flex;flex-direction:column;align-items:center;gap:2px}
+.letterwall{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;width:100%;max-width:420px}
+.letterwall .choice{width:calc((100% - 28px)/3);min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px}
 .letterwall .choice small{font-size:20px;font-family:var(--display);color:var(--ink-soft)}
 .letterwall .choice.heard{background:#fff3c4;border-color:var(--sun);box-shadow:0 6px 0 #e0a92a}
 .go{background:var(--grass);color:#fff;font-weight:800;font-size:26px;padding:12px 32px;border-radius:999px;box-shadow:0 6px 0 #4c9a41}
@@ -176,7 +176,7 @@ button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
 <body>
 <div class="app">
   <header class="top">
-    <div class="brand"><span class="fox" aria-hidden="true">🦊</span><h1>Sezen Lina'nın Harf Macerası<small>ANETİL · Tan ile ses ve hece avı</small></h1></div>
+    <div class="brand"><span class="fox" aria-hidden="true">🦊</span><h1>Sezen Lina'nın Harf Macerası<small>A N E T İ L O · Tan ile ses ve hece avı</small></h1></div>
     <button class="pill btn" id="soundBtn" aria-label="Sesi aç/kapat">🔊</button>
     <button class="pill btn" id="albumBtn" aria-label="Sticker albümü">📒 <span id="stkCount">0</span></button>
     <div class="pill" aria-label="Toplam yıldız">⭐ <span id="starCount">0</span></div>
@@ -208,24 +208,27 @@ button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
 <script>
 /* ---------- veri ---------- */
 const CHILD = 'Sezen Lina';
-const L = ['a','n','e','t','i','l'];
-const CONS = ['n','t','l'], VOW = ['a','e','i'];
+const L = ['a','n','e','t','i','l','o'];
+const CONS = ['n','t','l'], VOW = ['a','e','i','o'];
 // Ünsüzleri tek başına söyletiyoruz; motor harfi kendi bildiği gibi okur.
-const SND = {a:'a', n:'n', e:'e', t:'t', i:'i', l:'l'};
-const LW = {a:['at','🐴'], n:['nane','🌿'], e:['el','✋'], t:['tel','🧵'], i:['ilan','📢'], l:['lale','🌷']};
-const SYLS = ['na','ne','ni','ta','te','ti','la','le','li','an','en','in','at','et','al','el','il'];
+const SND = {a:'a', n:'n', e:'e', t:'t', i:'i', l:'l', o:'o'};
+const LW = {a:['at','🐴'], n:['nota','🎵'], e:['el','✋'], t:['ton','🐟'], i:['ilan','📢'], l:['lale','🌷'], o:['olta','🎣']};
+const SYLS = ['na','ne','ni','no','ta','te','ti','to','la','le','li','lo','an','en','in','on','at','et','ot','al','el','il','ol'];
 const WORDS = [
-  {w:'at',s:['at'],e:'🐴'},{w:'et',s:['et'],e:'🥩'},{w:'el',s:['el'],e:'✋'},{w:'tel',s:['tel'],e:'🧵'},{w:'tat',s:['tat'],e:'😋'},{w:'alt',s:['alt'],e:'⬇️'},
+  {w:'at',s:['at'],e:'🐴'},{w:'et',s:['et'],e:'🥩'},{w:'el',s:['el'],e:'✋'},{w:'tel',s:['tel'],e:'🧵'},
+  {w:'ot',s:['ot'],e:'🌱'},{w:'on',s:['on'],e:'🔟'},{w:'ton',s:['ton'],e:'🐟'},
   {w:'ana',s:['a','na'],e:'👩'},{w:'anne',s:['an','ne'],e:'👩‍👧'},{w:'nine',s:['ni','ne'],e:'👵'},{w:'nane',s:['na','ne'],e:'🌿'},
   {w:'lale',s:['la','le'],e:'🌷'},{w:'lila',s:['li','la'],e:'💜'},{w:'alet',s:['a','let'],e:'🔧'},{w:'ilan',s:['i','lan'],e:'📢'},
   {w:'atla',s:['at','la'],e:'🦘'},{w:'tatil',s:['ta','til'],e:'🏖️'},{w:'anten',s:['an','ten'],e:'📡'},{w:'telli',s:['tel','li'],e:'🎸'},
-  {w:'anlat',s:['an','lat'],e:'🗣️'},{w:'ilet',s:['i','let'],e:'📨'},{w:'Ali',s:['A','li'],e:'👦'},{w:'Ela',s:['E','la'],e:'👧'},
-  {w:'Atilla',s:['A','til','la'],e:'🧒'},{w:'naneli',s:['na','ne','li'],e:'🍵'},{w:'laleli',s:['la','le','li'],e:'💐'},
+  {w:'olta',s:['ol','ta'],e:'🎣'},{w:'nota',s:['no','ta'],e:'🎵'},{w:'otel',s:['o','tel'],e:'🏨'},{w:'alo',s:['a','lo'],e:'☎️'},{w:'oto',s:['o','to'],e:'🚗'},
+  {w:'Ali',s:['A','li'],e:'👦'},{w:'Ela',s:['E','la'],e:'👧'},
+  {w:'naneli',s:['na','ne','li'],e:'🍵'},{w:'laleli',s:['la','le','li'],e:'💐'},
   {w:'anneanne',s:['an','ne','an','ne'],e:'👵'}
 ];
 const SENT = [
-  {t:'Ali, atla!',e:'🦘'},{t:'Ela lale al.',e:'🌷'},{t:'Nine nane al.',e:'🌿'},{t:'Anne, tel al.',e:'🧵'},
-  {t:'Ali ile Ela.',e:'👫'},{t:'Anne, anlat!',e:'🗣️'},{t:'Ela, tatil!',e:'🏖️'},{t:'Ali, anten al.',e:'📡'}
+  {t:'Ali ata ot at.',e:'🐴'},{t:'Ela, olta al.',e:'🎣'},{t:'Nine nane al.',e:'🌿'},{t:'Anne, tel al.',e:'🧵'},
+  {t:'Ali ile Ela.',e:'👫'},{t:'Anne, alo!',e:'☎️'},{t:'Ela, tatil!',e:'🏖️'},{t:'Ali, nota al.',e:'🎵'},
+  {t:'On tane ot al.',e:'🌱'},{t:'Ela lale al.',e:'🌷'}
 ];
 // Gizli resimler: # olan kutularda hedef harf var.
 const PICS = [
@@ -236,7 +239,7 @@ const PICS = [
 ];
 // Sıra: sakin bir ada ile hareketli bir ada dönüşümlü gelir.
 const ISLANDS = [
-  {id:'ses',    name:'Ses Adası',          icon:'🌴', sticker:'🦜', plan:['meet','pickLetter','startLetter','pickLetter','startLetter','pickLetter','startLetter']},
+  {id:'ses',    name:'Ses Adası',          icon:'🌴', sticker:'🦜', plan:['meet','pickLetter:o','startLetter','pickLetter','startLetter:o','pickLetter','startLetter']},
   {id:'iz',     name:'Harf İzleme Tepesi', icon:'✏️', sticker:'🦒', plan:L.map(a=>'trace:'+a)},
   {id:'hece',   name:'Hece Köprüsü',       icon:'🌉', sticker:'🐢', plan:['blend','buildSyl','blend','buildSyl','blend','buildSyl']},
   {id:'balon',  name:'Balon Şenliği',      icon:'🎈', sticker:'🐼', plan:['balloonL','balloonS','balloonL','balloonS']},
@@ -321,8 +324,8 @@ function wrongSplits(w){
 }
 const G = {
   meet: () => ({type:'meet', key:'meet'}),
-  pickLetter(){ const a=rnd(L); return {type:'pickLetter', key:'p'+a, answer:a, options:shuffle([a,...pickN(L,2,[a])])}; },
-  startLetter(){ const a=rnd(L); return {type:'startLetter', key:'s'+a, answer:a, word:LW[a][0], emoji:LW[a][1], options:shuffle([a,...pickN(L,2,[a])])}; },
+  pickLetter(x){ const a=x||rnd(L); return {type:'pickLetter', key:'p'+a, answer:a, options:shuffle([a,...pickN(L,2,[a])])}; },
+  startLetter(x){ const a=x||rnd(L); return {type:'startLetter', key:'s'+a, answer:a, word:LW[a][0], emoji:LW[a][1], options:shuffle([a,...pickN(L,2,[a])])}; },
   blend(){
     const c=rnd(CONS), v=rnd(VOW), cv=Math.random()<.65, parts=cv?[c,v]:[v,c], ans=parts.join('');
     const opts=new Set([ans, parts.slice().reverse().join('')]);
