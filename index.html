@@ -10,84 +10,86 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Baloo+2:wght@600;700;800&display=swap">
 <style>
-/* Layout: bir macera haritası; üstte bugünün yolu (önce dikkat), altta dört diyar, en altta ortak albüm ve aile köşesi. Bir diyar açılınca tüm ekranı kaplar, üstte ince bir "haritaya dön" şeridi kalır. */
+/* Layout: okuma bilmeyen çocuk için yazısız ekran. Ortada tek dev OYNA düğmesi, üstünde 3 duraklı resimli yol, altında 4 büyük resim. Her şey sesli anlatılır. Aile bölümü gizli (basılı tut). */
 :root{
-  --sky:#e6f3ff; --paper:#ffffff; --ink:#1f2a44; --soft:#5d6a86; --line:#d5e2f2;
-  --sun:#ffc43d; --sun-deep:#d79a12; --go:#2fa46a; --rose:#ff6f91;
+  --sky:#e6f3ff; --paper:#ffffff; --ink:#1f2a44; --soft:#5d6a86; --line:#cfdff2;
+  --sun:#ffc43d; --sun-deep:#d79a12; --go:#2fa46a; --go-deep:#1f7a4c; --rose:#ff6f91;
   --sea:#2f8fd8; --forest:#3c9a5f; --night:#5b4bc4; --planet:#e8743b;
   --display:'Baloo 2', 'Comic Sans MS', system-ui, sans-serif;
   --body:'Andika', 'Trebuchet MS', system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --sky:#121a2e; --paper:#1c2640; --ink:#eef3ff; --soft:#a9b6d3; --line:#2e3b5c;
-  --sun:#ffcf5c; --sun-deep:#b07c08; --go:#4cc487; --rose:#ff8aa6;
+  --sun:#ffcf5c; --sun-deep:#b07c08; --go:#3fbb7c; --go-deep:#24865a; --rose:#ff8aa6;
   --sea:#4aa6ec; --forest:#55b878; --night:#8a7cf0; --planet:#f08a55; color-scheme:dark }}
 :root[data-theme="dark"]{
   --sky:#121a2e; --paper:#1c2640; --ink:#eef3ff; --soft:#a9b6d3; --line:#2e3b5c;
-  --sun:#ffcf5c; --sun-deep:#b07c08; --go:#4cc487; --rose:#ff8aa6;
+  --sun:#ffcf5c; --sun-deep:#b07c08; --go:#3fbb7c; --go-deep:#24865a; --rose:#ff8aa6;
   --sea:#4aa6ec; --forest:#55b878; --night:#8a7cf0; --planet:#f08a55; color-scheme:dark }
 
 html,body{height:100%}
-body{background:var(--sky); color:var(--ink); font:18px/1.45 var(--body)}
+body{background:var(--sky); color:var(--ink); font:18px/1.45 var(--body); -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none}
 *{box-sizing:border-box}
-button{font:inherit; color:inherit; cursor:pointer}
-button:focus-visible, a:focus-visible, textarea:focus-visible{outline:3px solid var(--sea); outline-offset:3px}
+button{font:inherit; color:inherit; cursor:pointer; touch-action:manipulation}
+button:focus-visible, textarea:focus-visible{outline:4px solid var(--sea); outline-offset:3px}
 
-/* ---------- harita ---------- */
-#home{min-height:100%; padding-block:18px 40px;
+/* ---------- çocuk ekranı ---------- */
+#home{min-height:100%; padding-block:14px 28px;
   padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px))}
-.wrap{max-width:980px; margin:0 auto; display:flex; flex-direction:column; gap:22px}
-.top{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
-.top h1{font:800 clamp(26px,5vw,40px)/1.05 var(--display); margin:0; text-wrap:balance}
-.top h1 small{display:block; font:600 16px/1.3 var(--body); color:var(--soft); margin-top:4px}
-.chips{display:flex; gap:8px}
-.chip{display:flex; align-items:center; gap:6px; background:var(--paper); border:2px solid var(--line); border-radius:999px; padding:6px 14px; font:700 20px var(--display); font-variant-numeric:tabular-nums}
-.chip b{color:var(--sun-deep)}
+.wrap{max-width:720px; margin:0 auto; display:flex; flex-direction:column; align-items:center; gap:22px}
+.topbar{width:100%; display:flex; align-items:center; gap:10px}
+.pill{display:flex; align-items:center; gap:6px; background:var(--paper); border:3px solid var(--line); border-radius:999px; padding:4px 16px; font:800 26px var(--display); font-variant-numeric:tabular-nums}
+.pill b{color:var(--sun-deep)}
+.round{width:60px; height:60px; border-radius:50%; border:3px solid var(--line); background:var(--paper); font-size:30px; display:grid; place-items:center; flex:none}
+.spacer{flex:1}
 
-.today{background:var(--paper); border:3px solid var(--sun); border-radius:24px; padding:18px; display:flex; flex-direction:column; gap:14px}
-.today h2{font:800 24px/1.1 var(--display); margin:0}
-.today p{margin:0; color:var(--soft)}
-.route{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; counter-reset:step}
-.step{display:flex; align-items:center; gap:12px; text-align:left; background:var(--sky); border:2px solid var(--line); border-radius:18px; padding:12px; min-width:0}
-.step .ic{font-size:34px; line-height:1; flex:none}
-.step .tx{min-width:0}
-.step .tx b{display:block; font:700 18px/1.15 var(--display)}
-.step .tx span{font-size:14px; color:var(--soft)}
-.step .mk{margin-left:auto; flex:none; width:34px; height:34px; border-radius:50%; display:grid; place-items:center; border:2px dashed var(--line); font:800 16px var(--display); color:var(--soft)}
-.step.done{border-color:var(--go)}
-.step.done .mk{background:var(--go); border:0; color:#fff}
-.step.next{border-color:var(--sun); box-shadow:0 0 0 4px color-mix(in srgb, var(--sun) 30%, transparent)}
-.bar{height:10px; border-radius:6px; background:var(--line); overflow:hidden; margin-top:6px}
-.bar i{display:block; height:100%; background:var(--go); width:0; transition:width .4s}
-.cheer{font:700 20px var(--display); color:var(--go)}
+.guide{display:flex; align-items:center; gap:12px; width:100%}
+.guide .face{font-size:64px; line-height:1; flex:none; animation:bob 2.4s ease-in-out infinite}
+.guide .say{position:relative; background:var(--paper); border:3px solid var(--line); border-radius:22px; padding:10px 16px; font:700 20px/1.3 var(--display); min-width:0; flex:1; display:flex; align-items:center; gap:10px}
+.guide .say span{flex:1; min-width:0}
+.guide .say button{border:0; background:var(--sky); border-radius:50%; width:46px; height:46px; font-size:24px; flex:none}
 
-.lands{display:grid; grid-template-columns:repeat(2,1fr); gap:16px}
-.land{position:relative; text-align:left; border:0; border-radius:26px; padding:20px; color:#fff; min-height:180px; display:flex; flex-direction:column; gap:6px; overflow:hidden; transition:transform .15s}
-.land:hover{transform:translateY(-3px)}
-.land:active{transform:scale(.98)}
-.land .big{font-size:64px; line-height:1; position:absolute; right:16px; bottom:10px; opacity:.95}
-.land .tag{font:700 13px/1 var(--body); letter-spacing:.08em; text-transform:uppercase; opacity:.9}
-.land h3{font:800 28px/1.05 var(--display); margin:0; max-width:75%}
-.land p{margin:0; max-width:70%; font-size:16px; opacity:.95}
-.land .st{margin-top:auto; font:700 18px var(--display); background:rgba(0,0,0,.18); border-radius:999px; padding:4px 12px; align-self:flex-start; font-variant-numeric:tabular-nums}
-.land.odak{background:linear-gradient(135deg,var(--night),#2c2470)}
-.land.dikkat{background:linear-gradient(135deg,var(--forest),#22663d)}
-.land.harf{background:linear-gradient(135deg,var(--sea),#1c5f99)}
-.land.sayi{background:linear-gradient(135deg,var(--planet),#a8441a)}
-.land .badge{position:absolute; top:14px; right:14px; background:var(--sun); color:#3a2a00; font:800 13px var(--display); border-radius:999px; padding:3px 10px}
+/* üç duraklı yol */
+.path{display:flex; align-items:center; justify-content:center; gap:0; width:100%}
+.stop{width:96px; height:96px; border-radius:50%; border:5px solid var(--line); background:var(--paper); font-size:52px; display:grid; place-items:center; position:relative; flex:none; padding:0}
+.stop .ok{position:absolute; right:-6px; bottom:-6px; width:38px; height:38px; border-radius:50%; background:var(--go); color:#fff; font:800 24px/38px var(--display); text-align:center; border:3px solid var(--paper)}
+.stop .ring{position:absolute; inset:-5px; border-radius:50%; background:conic-gradient(var(--go) var(--p,0%), transparent 0); -webkit-mask:radial-gradient(circle, transparent 58%, #000 59%); mask:radial-gradient(circle, transparent 58%, #000 59%)}
+.stop.done{border-color:var(--go)}
+.stop.next{border-color:var(--sun); animation:glow 1.6s ease-in-out infinite}
+.link{flex:1; max-width:70px; height:0; border-top:7px dotted var(--line)}
+.link.done{border-color:var(--go)}
 
-.album{background:var(--paper); border:2px solid var(--line); border-radius:24px; padding:18px; display:flex; flex-direction:column; gap:12px}
-.album h2{font:800 24px var(--display); margin:0}
-#shelves{display:flex; flex-direction:column; gap:14px}
-.shelf{display:flex; flex-direction:column; gap:4px}
-.shelf b{font:700 16px var(--display); color:var(--soft)}
-.stk{display:flex; flex-wrap:wrap; gap:6px; font-size:30px; line-height:1.2}
-.stk .empty{font-size:15px; color:var(--soft)}
+.play{width:190px; height:190px; border-radius:50%; border:0; background:var(--go); color:#fff; box-shadow:0 10px 0 var(--go-deep); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; animation:pulse 2s ease-in-out infinite; position:relative}
+.play .tri{font-size:84px; line-height:.9; margin-left:12px}
+.play .who{position:absolute; top:-14px; right:-14px; width:72px; height:72px; border-radius:50%; background:var(--paper); border:4px solid var(--sun); font-size:40px; display:grid; place-items:center}
+.play:active{transform:translateY(6px); box-shadow:0 4px 0 var(--go-deep)}
+.play.trophy{background:var(--sun); box-shadow:0 10px 0 var(--sun-deep)}
 
-details.parent{background:var(--paper); border:2px dashed var(--line); border-radius:20px; padding:12px 18px}
-details.parent summary{font:700 18px var(--display); cursor:pointer}
-.pbody{display:flex; flex-direction:column; gap:10px; padding-top:10px; font-size:16px}
-.pbody textarea{width:100%; min-height:90px; font:13px/1.3 ui-monospace, Menlo, monospace; border:2px solid var(--line); border-radius:12px; padding:8px; background:var(--sky); color:var(--ink); word-break:break-all}
+.free{width:100%; display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+.tile{border:0; border-radius:26px; aspect-ratio:1; max-width:100%; font-size:min(15vw,64px); display:grid; place-items:center; color:#fff; position:relative; box-shadow:0 6px 0 rgba(0,0,0,.18)}
+.tile:active{transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,.18)}
+.tile.odak{background:var(--night)} .tile.harf{background:var(--sea)} .tile.sayi{background:var(--planet)} .tile.dikkat{background:var(--forest)}
+.tile .n{position:absolute; left:8px; bottom:6px; font:800 16px var(--display); background:rgba(0,0,0,.25); border-radius:999px; padding:0 8px; font-variant-numeric:tabular-nums}
+
+.lock{position:fixed; right:max(12px, env(safe-area-inset-right, 0px)); bottom:calc(12px + env(safe-area-inset-bottom, 0px)); width:44px; height:44px; border-radius:50%; border:2px solid var(--line); background:var(--paper); font-size:20px; opacity:.6; display:grid; place-items:center}
+.lock.hold{animation:fill 1.4s linear forwards}
+
+/* ---------- katmanlar ---------- */
+.sheet{position:fixed; inset:0; z-index:30; background:color-mix(in srgb, var(--ink) 45%, transparent); display:grid; place-items:center;
+  padding-block:calc(16px + env(safe-area-inset-top, 0px)) calc(16px + env(safe-area-inset-bottom, 0px));
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.card{background:var(--paper); border-radius:28px; width:100%; max-width:640px; max-height:100%; overflow:auto; padding:20px; display:flex; flex-direction:column; gap:14px; position:relative}
+.close{position:absolute; top:12px; right:12px; width:54px; height:54px; border-radius:50%; border:0; background:var(--sky); font-size:28px}
+.card h2{font:800 26px var(--display); margin:0; padding-right:60px}
+.shelf{display:flex; align-items:flex-start; gap:12px}
+.shelf .ic{font-size:40px; flex:none; width:56px; height:56px; border-radius:16px; display:grid; place-items:center}
+.stk{display:flex; flex-wrap:wrap; gap:6px; font-size:40px; line-height:1.2; min-width:0}
+.stk .slot{width:48px; height:48px; border-radius:12px; border:3px dashed var(--line)}
+.ic.odak{background:var(--night)} .ic.harf{background:var(--sea)} .ic.sayi{background:var(--planet)} .ic.dikkat{background:var(--forest)}
+
+.pbody{display:flex; flex-direction:column; gap:10px; font-size:16px; user-select:text; -webkit-user-select:text}
+.pbody p{margin:0}
+.pbody textarea{width:100%; min-height:80px; font:13px/1.3 ui-monospace, Menlo, monospace; border:2px solid var(--line); border-radius:12px; padding:8px; background:var(--sky); color:var(--ink); word-break:break-all}
 .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
 .btn{border:0; border-radius:999px; padding:9px 18px; font:700 17px var(--display); background:var(--sea); color:#fff}
 .btn.ghost{background:transparent; border:2px solid var(--line); color:var(--ink)}
@@ -98,66 +100,83 @@ details.parent summary{font:700 18px var(--display); cursor:pointer}
 
 /* ---------- oyun ekranı ---------- */
 #play{position:fixed; inset:0; display:flex; flex-direction:column; background:var(--sky); z-index:5}
-.pbar{display:flex; align-items:center; gap:10px; background:var(--paper); border-bottom:2px solid var(--line);
+.pbar{display:flex; align-items:center; gap:10px; background:var(--paper); border-bottom:3px solid var(--line);
   padding-block:calc(6px + env(safe-area-inset-top, 0px)) 6px;
   padding-left:max(12px, env(safe-area-inset-left, 0px)); padding-right:max(12px, env(safe-area-inset-right, 0px))}
-.pbar .home{border:0; background:var(--sun); color:#3a2a00; border-radius:999px; padding:6px 16px; font:800 17px var(--display); flex:none}
-.pbar .nm{font:700 18px var(--display); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0}
-.pbar .chip{margin-left:auto; font-size:17px; padding:3px 12px; flex:none}
+.pbar .home{border:0; background:var(--sun); border-radius:999px; height:52px; padding:0 18px; font-size:30px; display:flex; align-items:center; gap:6px; flex:none}
+.pbar .home.ready{background:var(--go); color:#fff; animation:pulse 1.4s ease-in-out infinite}
+.pbar .home small{font:800 22px var(--display)}
+.pbar .who{font-size:34px}
+.pbar .pill{margin-left:auto; font-size:20px; padding:2px 12px}
 #frame{flex:1; width:100%; border:0; background:var(--sky); display:block}
 
-#toast{position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom, 0px)); transform:translateX(-50%); background:var(--ink); color:var(--paper); padding:10px 20px; border-radius:999px; font:700 18px var(--display); z-index:20; max-width:calc(100% - 32px); text-align:center}
+#toast{position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom, 0px)); transform:translateX(-50%); background:var(--go); color:#fff; padding:12px 24px; border-radius:999px; font:800 24px var(--display); z-index:40; max-width:calc(100% - 32px); text-align:center; box-shadow:0 6px 0 var(--go-deep)}
 
-@media (max-width:720px){ .route{grid-template-columns:1fr} }
-@media (max-width:560px){ .lands{grid-template-columns:1fr} .land{min-height:150px} .land .big{font-size:52px} }
-@media (prefers-reduced-motion:reduce){ *{transition:none!important; animation:none!important} }
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--sun) 60%, transparent)}50%{box-shadow:0 0 0 12px color-mix(in srgb, var(--sun) 0%, transparent)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes fill{from{box-shadow:inset 0 0 0 0 var(--sun)}to{box-shadow:inset 0 0 0 24px var(--sun); opacity:1}}
+@media (max-width:420px){ .stop{width:80px; height:80px; font-size:42px} .play{width:170px; height:170px} .free{gap:8px} }
+@media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} }
 </style>
 </head>
 <body>
 
 <div id="home">
   <div class="wrap">
-    <header class="top">
-      <h1>Sezen Lina'nın Macera Dünyası<small>Dikkat, harfler ve sayılar tek haritada</small></h1>
-      <div class="chips"><span class="chip" title="Toplam yıldız">⭐ <b id="totStars">0</b></span><span class="chip" title="Toplam çıkartma">🎟️ <b id="totStk">0</b></span><span class="chip" title="Tamamlanan günler">🏅 <b id="totDays">0</b></span></div>
-    </header>
+    <div class="topbar">
+      <span class="pill" aria-label="Yıldızların">⭐ <b id="totStars">0</b></span>
+      <button class="round" id="albumBtn" aria-label="Çıkartma albümü">📒</button>
+      <span class="spacer"></span>
+      <button class="round" id="soundBtn" aria-label="Ses">🔊</button>
+    </div>
 
-    <section class="today" aria-labelledby="todayH">
-      <h2 id="todayH">Bugünün macera yolu</h2>
-      <p id="todayP">Önce odak, sonra harfler, en son sayılar. Her durakta 4 dakika oyna, işaret kendiliğinden konur.</p>
-      <div class="route" id="route"></div>
-      <div class="cheer" id="cheer" hidden></div>
-    </section>
+    <div class="guide">
+      <span class="face" aria-hidden="true">🦊</span>
+      <div class="say"><span id="sayText">Merhaba Sezen Lina!</span><button id="replay" aria-label="Tekrar dinle">🔈</button></div>
+    </div>
 
-    <section class="lands" id="lands" aria-label="Diyarlar"></section>
+    <div class="path" id="path" aria-label="Bugünün yolu"></div>
 
-    <section class="album" aria-labelledby="albH">
-      <h2 id="albH">Ortak çıkartma albümü</h2>
-      <div id="shelves"></div>
-    </section>
+    <button class="play" id="playBtn" aria-label="Oyna"><span class="tri" aria-hidden="true">▶</span><span class="who" id="playWho" aria-hidden="true">🚀</span></button>
 
-    <details class="parent">
-      <summary>Aile köşesi</summary>
-      <div class="pbody">
-        <div><b>Bu hafta oyun süresi</b> (dakika)</div>
-        <div class="minutes" id="minutes"></div>
-        <div><b>Yedek kodu</b>: tüm diyarların yıldızları, çıkartmaları ve dikkat ölçümleri bu tek kodda. Kopyalayıp saklayın; başka bir cihazda buraya yapıştırıp “Geri yükle”ye basın.</div>
-        <textarea id="code" readonly aria-label="Yedek kodu"></textarea>
-        <div class="row"><button class="btn" id="copyBtn">Kodu kopyala</button><span class="msg" id="copyMsg"></span></div>
-        <label for="restore"><b>Kodu geri yükle</b></label>
-        <textarea id="restore" placeholder="SEZEN- ile başlayan kodu buraya yapıştırın"></textarea>
-        <div class="row"><button class="btn ghost" id="restoreBtn">Geri yükle</button><span id="restoreAsk" hidden>Bu cihazdaki ilerlemenin yerine geçecek. Emin misiniz? <button class="btn warn" id="restoreYes">Evet, yükle</button> <button class="btn ghost" id="restoreNo">Vazgeç</button></span><span class="msg" id="restoreMsg"></span></div>
-        <div style="color:var(--soft)">Eski tek tek kodlar (TAN-, DKT-, ODK-, ROBI-) hâlâ ilgili diyarın kendi albümünden yüklenebilir.</div>
-      </div>
-    </details>
+    <div class="free" id="free" aria-label="Bütün oyunlar"></div>
+  </div>
+  <button class="lock" id="lockBtn" aria-label="Aile köşesi (basılı tutun)">🔒</button>
+</div>
+
+<div class="sheet" id="albumSheet" hidden>
+  <div class="card">
+    <button class="close" data-close aria-label="Kapat">✖</button>
+    <h2>📒 <span id="albCount">0</span></h2>
+    <div id="shelves" style="display:flex; flex-direction:column; gap:14px"></div>
+  </div>
+</div>
+
+<div class="sheet" id="parentSheet" hidden>
+  <div class="card">
+    <button class="close" data-close aria-label="Kapat">✖</button>
+    <h2>Aile köşesi</h2>
+    <div class="pbody">
+      <p>Çocuk ekranı yazısızdır; Tan her adımı sesli söyler. Her gün yeşil OYNA düğmesi sırayla üç durağa götürür: önce Odak Kampı (dikkat), sonra Harf Macerası, sonra Sayı Gezegeni. Her durak 4 dakika; süre dolunca ev düğmesi yeşil yanar ve Tan sıradakine çağırır. Alttaki dört resimle her oyun serbestçe açılabilir. Oyunların kendi ebeveyn panelleri ve ölçüm grafikleri oyunların içinde duruyor.</p>
+      <p><b>Bu hafta oyun süresi</b> (dakika)</p>
+      <div class="minutes" id="minutes"></div>
+      <p><b>Yedek kodu</b>: tüm oyunların yıldızları, çıkartmaları ve dikkat ölçümleri bu tek kodda. Saklayın; başka cihazda buraya yapıştırıp “Geri yükle”ye basın.</p>
+      <textarea id="code" readonly aria-label="Yedek kodu"></textarea>
+      <div class="row"><button class="btn" id="copyBtn">Kodu kopyala</button><span class="msg" id="copyMsg"></span></div>
+      <label for="restore"><b>Kodu geri yükle</b></label>
+      <textarea id="restore" placeholder="SEZEN- ile başlayan kodu buraya yapıştırın"></textarea>
+      <div class="row"><button class="btn ghost" id="restoreBtn">Geri yükle</button><span id="restoreAsk" hidden>Bu cihazdaki ilerlemenin yerine geçecek. Emin misiniz? <button class="btn warn" id="restoreYes">Evet, yükle</button> <button class="btn ghost" id="restoreNo">Vazgeç</button></span><span class="msg" id="restoreMsg"></span></div>
+      <p style="color:var(--soft)">Eski tek tek kodlar (TAN-, DKT-, ODK-, ROBI-) ilgili oyunun kendi albümünden yüklenebilir.</p>
+    </div>
   </div>
 </div>
 
 <div id="play" hidden>
   <div class="pbar">
-    <button class="home" id="homeBtn">🗺️ Harita</button>
-    <span class="nm" id="playName"></span>
-    <span class="chip">⭐ <b id="playStars">0</b></span>
+    <button class="home" id="homeBtn" aria-label="Haritaya dön">🏠<small id="homeOk" hidden>✓</small></button>
+    <span class="who" id="playIcon" aria-hidden="true"></span>
+    <span class="pill">⭐ <b id="playStars">0</b></span>
   </div>
   <iframe id="frame" title="Oyun" allow="autoplay"></iframe>
 </div>
@@ -167,12 +186,12 @@ details.parent summary{font:700 18px var(--display); cursor:pointer}
 const CHILD = 'Sezen Lina';
 const HUB_KEY = 'sezen-macera-dunyasi-v1';
 const GOAL_SEC = 4*60;   // durak başına günlük hedef
-// Diyarlar: key = her uygulamanın kendi localStorage anahtarı
+// key = her oyunun kendi localStorage anahtarı
 const LANDS = [
-  {id:'odak',   cls:'odak',   file:'apps/odak.html',   key:'odak-kampi-v1',     icon:'🚀', tag:'Dikkat · ölçümlü', name:'Odak Kampı',      desc:'Roketle gezegenlere; her gün 3 odak oyunu ve haftalık ölçüm.', stars:s=>+s.stars||0},
-  {id:'harf',   cls:'harf',   file:'apps/harf.html',   key:'anetil-macera-v1',  icon:'🦊', tag:'Okuma · A N E T İ L O', name:'Harf Macerası', desc:'Tan ile ses, hece ve kelime adaları.', stars:s=>sum(s.stars)},
-  {id:'sayi',   cls:'sayi',   file:'apps/sayi.html',   key:'sayi-gezegeni-v1',  icon:'🤖', tag:'Matematik · 1. sınıf', name:'Sayı Gezegeni', desc:'Robi ile sayma, toplama, çıkarma ve şekiller.', stars:s=>sum(s.stars)},
-  {id:'dikkat', cls:'dikkat', file:'apps/dikkat.html', key:'dikkat-macera-v1',  icon:'🌳', tag:'Dikkat · sakin oyunlar', name:'Dikkat Ormanı', desc:'Aynısını bul, gölge eşleştir, hafıza mağarası.', stars:s=>sum(s.stars)},
+  {id:'odak',   file:'apps/odak.html',   key:'odak-kampi-v1',    icon:'🚀', name:'Odak Kampı',    go:'Roketine bin, Odak Kampı’na gidiyoruz!', stars:s=>+s.stars||0},
+  {id:'harf',   file:'apps/harf.html',   key:'anetil-macera-v1', icon:'🦊', name:'Harf Macerası', go:'Harf adalarına gidiyoruz!',              stars:s=>sum(s.stars)},
+  {id:'sayi',   file:'apps/sayi.html',   key:'sayi-gezegeni-v1', icon:'🤖', name:'Sayı Gezegeni', go:'Robi seni Sayı Gezegeni’nde bekliyor!', stars:s=>sum(s.stars)},
+  {id:'dikkat', file:'apps/dikkat.html', key:'dikkat-macera-v1', icon:'🌳', name:'Dikkat Ormanı', go:'Dikkat Ormanı’na gidiyoruz!',           stars:s=>sum(s.stars)},
 ];
 const ROUTE = ['odak','harf','sayi'];   // öncelik dikkat süresi
 const PRAISE = ['Aferin '+CHILD+'!','Harikasın '+CHILD+'!','Süpersin '+CHILD+'!','Bravo '+CHILD+'!'];
@@ -180,62 +199,86 @@ const PRAISE = ['Aferin '+CHILD+'!','Harikasın '+CHILD+'!','Süpersin '+CHILD+'
 const $ = s => document.querySelector(s);
 const sum = o => Object.values(o||{}).reduce((a,b)=>a+(+b||0),0);
 const byId = id => LANDS.find(l=>l.id===id);
+const rnd = a => a[Math.floor(Math.random()*a.length)];
 const dayKey = (d=new Date()) => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 
 function readApp(l){ try { return JSON.parse(localStorage.getItem(l.key)) || {}; } catch(e){ return {}; } }
-let hub = {log:{}, done:[]};
+let hub = {log:{}, done:[], sound:true};
 try { const h = JSON.parse(localStorage.getItem(HUB_KEY)); if (h) hub = Object.assign(hub, h); } catch(e){}
 const saveHub = () => { try { localStorage.setItem(HUB_KEY, JSON.stringify(hub)); } catch(e){} };
 const secToday = id => ((hub.log[dayKey()]||{})[id]) || 0;
+const nextStop = () => ROUTE.find(id => secToday(id) < GOAL_SEC);
 
-function toast(t){ const el=$('#toast'); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true, 2600); }
+/* ---------- ses ---------- */
+let trVoice=null;
+function loadVoices(){ try { const v=speechSynthesis.getVoices(); trVoice=v.find(x=>/^tr/i.test(x.lang))||null; } catch(e){} }
+try { loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; } catch(e){}
+function say(t){
+  $('#sayText').textContent=t;
+  if (!hub.sound) return;
+  try { speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='tr-TR'; if (trVoice) u.voice=trVoice; u.rate=.9; u.pitch=1.1; speechSynthesis.speak(u); } catch(e){}
+}
+function toast(t){ const el=$('#toast'); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true, 3500); }
 
-function totals(){
-  let stars=0, stk=0;
-  for (const l of LANDS){ const s=readApp(l); stars+=l.stars(s); stk+=(s.stickers||[]).length; }
-  return {stars, stk};
+function totals(){ let stars=0, stk=0; for (const l of LANDS){ const s=readApp(l); stars+=l.stars(s); stk+=(s.stickers||[]).length; } return {stars, stk}; }
+
+function homeLine(){
+  const n=nextStop();
+  if (!n) return 'Harikasın '+CHILD+'! Bugünkü yolu bitirdin. Kupa senin! İstersen aşağıdaki resimlerden birine bas.';
+  const i=ROUTE.indexOf(n), l=byId(n);
+  if (i===0 && secToday(n)===0) return 'Merhaba '+CHILD+'! Yeşil düğmeye bas, önce '+l.name+'’na gidelim.';
+  return (i>0 && secToday(n)===0 ? rnd(PRAISE)+' ' : '')+'Şimdi sıra '+l.name+'. Yeşil düğmeye bas!';
 }
 
 function renderHome(){
-  const t = totals();
-  $('#totStars').textContent = t.stars; $('#totStk').textContent = t.stk; $('#totDays').textContent = hub.done.length;
-  // bugünün yolu
-  const nextId = ROUTE.find(id => secToday(id) < GOAL_SEC);
-  $('#route').innerHTML = ROUTE.map((id,i) => {
-    const l=byId(id), sec=secToday(id), ok=sec>=GOAL_SEC, pct=Math.min(100, Math.round(sec/GOAL_SEC*100));
-    return `<button class="step ${ok?'done':''} ${id===nextId?'next':''}" data-open="${id}">
-      <span class="ic" aria-hidden="true">${l.icon}</span>
-      <span class="tx"><b>${i+1}. ${l.name}</b><span>${ok?'Tamam!':Math.ceil((GOAL_SEC-sec)/60)+' dakika kaldı'}</span><span class="bar"><i style="width:${pct}%"></i></span></span>
-      <span class="mk" aria-label="${ok?'tamamlandı':'bekliyor'}">${ok?'✓':i+1}</span></button>`;
+  const t=totals();
+  $('#totStars').textContent=t.stars;
+  $('#soundBtn').textContent=hub.sound?'🔊':'🔇';
+  const n=nextStop();
+  $('#path').innerHTML = ROUTE.map((id,i) => {
+    const l=byId(id), sec=secToday(id), ok=sec>=GOAL_SEC, p=Math.min(100,Math.round(sec/GOAL_SEC*100));
+    return (i?`<span class="link ${secToday(ROUTE[i-1])>=GOAL_SEC?'done':''}"></span>`:'')+
+      `<button class="stop ${ok?'done':''} ${id===n?'next':''}" data-open="${id}" aria-label="${l.name}">
+        ${!ok&&p?`<span class="ring" style="--p:${p}%"></span>`:''}${l.icon}${ok?'<span class="ok">✓</span>':''}</button>`;
   }).join('');
-  const all = !nextId;
-  $('#cheer').hidden = !all;
-  if (all) $('#cheer').textContent = '🏅 Harikasın '+CHILD+'! Bugünün yolunu bitirdin. Dikkat Ormanı’nda serbestçe oynayabilirsin.';
-  // diyarlar
-  $('#lands').innerHTML = LANDS.map(l => {
-    const s=readApp(l);
-    return `<button class="land ${l.cls}" data-open="${l.id}">
-      ${l.id===nextId?'<span class="badge">Sıradaki</span>':''}
-      <span class="tag">${l.tag}</span><h3>${l.name}</h3><p>${l.desc}</p>
-      <span class="st">⭐ ${l.stars(s)} · 🎟️ ${(s.stickers||[]).length}</span>
-      <span class="big" aria-hidden="true">${l.icon}</span></button>`;
-  }).join('');
-  // albüm
+  $('#playWho').textContent = n ? byId(n).icon : '🏆';
+  $('#playBtn').classList.toggle('trophy', !n);
+  $('#playBtn').querySelector('.tri').textContent = n ? '▶' : '🏆';
+  $('#free').innerHTML = LANDS.map(l => `<button class="tile ${l.id}" data-open="${l.id}" aria-label="${l.name}">${l.icon}<span class="n">⭐${l.stars(readApp(l))}</span></button>`).join('');
+  $('#sayText').textContent = homeLine();
+}
+
+/* ---------- albüm ---------- */
+function openAlbum(){
+  let all=0;
   $('#shelves').innerHTML = LANDS.map(l => {
-    const k=readApp(l).stickers||[];
-    return `<div class="shelf"><b>${l.icon} ${l.name}</b><div class="stk">${k.length?k.map(x=>`<span>${x}</span>`).join(''):'<span class="empty">Henüz çıkartma yok. Bir oyun bitir, ilk çıkartman gelsin!</span>'}</div></div>`;
+    const k=readApp(l).stickers||[]; all+=k.length;
+    return `<div class="shelf"><span class="ic ${l.id}">${l.icon}</span><div class="stk">${k.map(x=>`<span>${x}</span>`).join('')}${k.length?'':'<span class="slot"></span><span class="slot"></span><span class="slot"></span>'}</div></div>`;
   }).join('');
-  // aile köşesi
+  $('#albCount').textContent=all;
+  $('#albumSheet').hidden=false;
+  say(all ? 'Senin çıkartmaların! Tam '+all+' tane. '+rnd(PRAISE) : 'Albümün boş. Oyun bitirince çıkartma kazanacaksın!');
+}
+$('#albumBtn').onclick=openAlbum;
+document.addEventListener('click', e => { if (e.target.closest('[data-close]')) e.target.closest('.sheet').hidden=true; });
+
+/* ---------- aile köşesi: 1,4 sn basılı tut ---------- */
+let holdT=null; const lk=$('#lockBtn');
+lk.onpointerdown = () => { lk.classList.add('hold'); holdT=setTimeout(()=>{ lk.classList.remove('hold'); openParent(); }, 1400); };
+['pointerup','pointerleave','pointercancel'].forEach(ev => lk.addEventListener(ev, () => { clearTimeout(holdT); lk.classList.remove('hold'); }));
+lk.onkeydown = e => { if (e.key==='Enter') openParent(); };
+function openParent(){
   const days=[...Array(7)].map((_,i)=>{ const d=new Date(); d.setDate(d.getDate()-i); return dayKey(d); });
-  $('#minutes').innerHTML = LANDS.map(l => `<div>${l.icon} ${l.name}: <b>${Math.round(days.reduce((a,d)=>a+((hub.log[d]||{})[l.id]||0),0)/60)}</b></div>`).join('');
-  $('#code').value = makeCode();
+  $('#minutes').innerHTML = LANDS.map(l => `<div>${l.icon} ${l.name}: <b>${Math.round(days.reduce((a,d)=>a+((hub.log[d]||{})[l.id]||0),0)/60)}</b></div>`).join('')
+    + `<div>🏆 Tamamlanan gün: <b>${hub.done.length}</b></div>`;
+  $('#code').value=makeCode();
+  $('#parentSheet').hidden=false;
 }
 
 /* ---------- ortak yedek kodu ---------- */
 function makeCode(){
-  const d = {v:1, a:'sezen', k:{}};
-  for (const l of LANDS){ try { const raw=localStorage.getItem(l.key); if (raw) d.k[l.key]=raw; } catch(e){} }
-  try { const raw=localStorage.getItem(HUB_KEY); if (raw) d.k[HUB_KEY]=raw; } catch(e){}
+  const d={v:1, a:'sezen', k:{}};
+  for (const k of [...LANDS.map(l=>l.key), HUB_KEY]){ try { const raw=localStorage.getItem(k); if (raw) d.k[k]=raw; } catch(e){} }
   return 'SEZEN-'+btoa(unescape(encodeURIComponent(JSON.stringify(d))));
 }
 function readCode(c){
@@ -255,19 +298,23 @@ $('#restoreNo').onclick = () => $('#restoreAsk').hidden=true;
 $('#restoreYes').onclick = () => {
   const d=readCode($('#restore').value); if (!d) return;
   try { for (const [k,v] of Object.entries(d.k)) localStorage.setItem(k,v); } catch(e){ $('#restoreMsg').textContent='Bu tarayıcı kayıt yapmaya izin vermiyor.'; return; }
-  try { hub = Object.assign({log:{}, done:[]}, JSON.parse(d.k[HUB_KEY]||'{}')); } catch(e){}
-  $('#restoreAsk').hidden=true; $('#restore').value=''; $('#restoreMsg').textContent='Yüklendi. Kaldığın yerden devam!';
-  renderHome();
+  try { hub=Object.assign({log:{}, done:[], sound:true}, JSON.parse(d.k[HUB_KEY]||'{}')); } catch(e){}
+  $('#restoreAsk').hidden=true; $('#restore').value=''; $('#restoreMsg').textContent='Yüklendi.';
+  renderHome(); openParent();
 };
 
-/* ---------- diyar açma / kapama ---------- */
+/* ---------- oyun açma / kapama ---------- */
 let current=null;
 function openLand(id){
   const l=byId(id); if (!l) return;
   current=id;
-  $('#playName').textContent = l.icon+' '+l.name;
-  $('#playStars').textContent = totals().stars;
+  try { speechSynthesis.cancel(); } catch(e){}
+  $('#playIcon').textContent=l.icon;
+  $('#playStars').textContent=totals().stars;
+  const ready = ROUTE.includes(id) && secToday(id)>=GOAL_SEC;
+  $('#homeBtn').classList.toggle('ready', ready); $('#homeOk').hidden=!ready;
   if ($('#frame').dataset.src!==l.file){ $('#frame').src=l.file; $('#frame').dataset.src=l.file; }
+  document.querySelectorAll('.sheet').forEach(s=>s.hidden=true);
   $('#home').hidden=true; $('#play').hidden=false;
   try { if (location.hash!=='#'+id) history.replaceState(null,'','#'+id); } catch(e){}
 }
@@ -276,30 +323,42 @@ function goHome(){
   $('#frame').src='about:blank'; $('#frame').dataset.src='';
   $('#play').hidden=true; $('#home').hidden=false;
   try { if (location.hash) history.replaceState(null,'',location.pathname+location.search); } catch(e){}
-  renderHome(); window.scrollTo(0,0);
+  renderHome(); window.scrollTo(0,0); say(homeLine());
 }
-document.addEventListener('click', e => { const b=e.target.closest('[data-open]'); if (b) openLand(b.dataset.open); });
+document.addEventListener('click', e => {
+  const b=e.target.closest('[data-open]'); if (!b) return;
+  openLand(b.dataset.open);
+});
+$('#playBtn').onclick = () => {
+  const n=nextStop();
+  if (n) openLand(n);
+  else { toast('🏆 '+rnd(PRAISE)); say('Harikasın '+CHILD+'! Bugün bütün yolu bitirdin. Aşağıdaki resimlerden istediğine basıp oynayabilirsin.'); }
+};
+$('#replay').onclick = () => say($('#sayText').textContent);
+$('#soundBtn').onclick = () => { hub.sound=!hub.sound; saveHub(); renderHome(); if (hub.sound) say('Ses açık!'); else try{speechSynthesis.cancel();}catch(e){} };
 $('#homeBtn').onclick = goHome;
 window.addEventListener('hashchange', () => { const id=location.hash.slice(1); if (byId(id)) openLand(id); else if (current) goHome(); });
 
-// oyunlar yıldız kazanınca kendi kayıtlarını yazar; aynı kökenli sayfa bunu duyar
-window.addEventListener('storage', e => { if (current && LANDS.some(l=>l.key===e.key)) $('#playStars').textContent = totals().stars; });
+// oyunlar kendi kayıtlarını yazınca aynı kökenli bu sayfa duyar
+window.addEventListener('storage', e => { if (current && LANDS.some(l=>l.key===e.key)) $('#playStars').textContent=totals().stars; });
 
-// süre sayacı: yalnız bir diyar açıkken ve ekran görünürken
+// süre sayacı: yalnız bir oyun açıkken ve ekran görünürken
 setInterval(() => {
   if (!current || document.hidden) return;
   const dk=dayKey(); hub.log[dk]=hub.log[dk]||{};
   const before=hub.log[dk][current]||0; hub.log[dk][current]=before+1;
   if (ROUTE.includes(current) && before<GOAL_SEC && before+1>=GOAL_SEC){
-    toast(PRAISE[Math.floor(Math.random()*PRAISE.length)]+' Bu durak tamam ✓');
-    if (ROUTE.every(id=>secToday(id)>=GOAL_SEC) && !hub.done.includes(dk)){ hub.done.push(dk); toast('🏅 Harikasın '+CHILD+'! Bugünün yolu bitti!'); }
+    $('#homeBtn').classList.add('ready'); $('#homeOk').hidden=false;
+    const last = ROUTE.every(id=>secToday(id)>=GOAL_SEC);
+    if (last && !hub.done.includes(dk)) hub.done.push(dk);
+    toast(last ? '🏆 '+rnd(PRAISE) : '✓ '+rnd(PRAISE)+' 🏠');
     saveHub();
   }
   if ((before+1)%10===0) saveHub();
 }, 1000);
 window.addEventListener('pagehide', saveHub);
 
-// eski kayıtları temizle (60 günden eski)
+// 60 günden eski süre kayıtlarını sil
 (() => { const cut=new Date(); cut.setDate(cut.getDate()-60); const ck=dayKey(cut); for (const d of Object.keys(hub.log)) if (d<ck) delete hub.log[d]; })();
 
 renderHome();

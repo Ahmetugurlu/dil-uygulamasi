@@ -7,7 +7,7 @@
 - **Sayı Gezegeni** (`apps/sayi.html`): 1. sınıf matematik
 - **Dikkat Ormanı** (`apps/dikkat.html`): sakin dikkat oyunları
 
-Ana harita (`index.html`) her gün "Bugünün macera yolu"nu gösterir: önce Odak Kampı, sonra Harf Macerası, sonra Sayı Gezegeni (her durak 4 dakika). Yıldızlar ve çıkartmalar ortak albümde toplanır. Aile köşesinde haftalık süre ve tüm ilerlemeyi taşıyan tek yedek kodu (`SEZEN-...`) bulunur.
+Ana ekran (`index.html`) okuma bilmeyen çocuk için yazısız ve seslidir: tek büyük yeşil OYNA düğmesi sırayla önce Odak Kampı, sonra Harf Macerası, sonra Sayı Gezegeni'ne götürür (her durak 4 dakika). Alttaki dört resimle her oyun serbestçe açılır. Yıldızlar ve çıkartmalar 📒 albümde toplanır. 🔒 düğmesine 1,4 sn basılı tutunca aile köşesi açılır: haftalık süre ve tüm ilerlemeyi taşıyan tek yedek kodu (`SEZEN-...`).
 
 ## Kullanım
 
