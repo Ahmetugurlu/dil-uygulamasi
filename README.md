@@ -1,13 +1,16 @@
-# ANETİL Harf Macerası
+# Sezen Lina'nın Macera Dünyası
 
-7 yaşındaki 1. sınıf öğrencileri için A, N, E, T, İ, L harfleriyle oyunlaştırılmış okuma uygulaması. MEB ses temelli okuma sırasına uygun; ses-harf birleştirme ve heceleme alıştırmaları içerir.
+7 yaşındaki 1. sınıf öğrencisi için tek bir uygulamada dört oyunlaştırılmış öğrenme diyarı:
 
-- 7 ada: Ses Adası, Hece Köprüsü, Kelime Ormanı, Hece Şelalesi, Eksik Harf Mağarası, Cümle Kalesi, Hazine Adası
-- Her adada yıldız ve çıkartma toplanır (24 çıkartmalık albüm)
-- Rehber karakter: Tan (tilki)
+- **Odak Kampı** (`apps/odak.html`): ölçümlü, uyarlanabilir dikkat süresi çalışması (öncelikli)
+- **Harf Macerası** (`apps/harf.html`): A N E T İ L O harfleriyle ses, hece, kelime ve cümle (MEB ses temelli okuma)
+- **Sayı Gezegeni** (`apps/sayi.html`): 1. sınıf matematik
+- **Dikkat Ormanı** (`apps/dikkat.html`): sakin dikkat oyunları
+
+Ana harita (`index.html`) her gün "Bugünün macera yolu"nu gösterir: önce Odak Kampı, sonra Harf Macerası, sonra Sayı Gezegeni (her durak 4 dakika). Yıldızlar ve çıkartmalar ortak albümde toplanır. Aile köşesinde haftalık süre ve tüm ilerlemeyi taşıyan tek yedek kodu (`SEZEN-...`) bulunur.
 
 ## Kullanım
 
-`index.html` dosyasını tarayıcıda açmak yeterli. Sesler tarayıcının Türkçe (tr-TR) konuşma özelliğiyle okunur. İlerleme cihazda saklanır.
+Klasörü olduğu gibi bir web sunucusunda (ör. GitHub Pages) yayınlayın ve `index.html`'i açın. Sesler tarayıcının Türkçe (tr-TR) konuşma özelliğiyle okunur. İlerleme cihazda saklanır.
 
-Çevrimiçi sürüm: https://claude.ai/artifact/S4cNztdy1rSpqMiQL3F8DJ
+Çevrimiçi sürüm: https://claude.ai/artifact/6F6jj1bPRrT6vTaT6PfV3z
