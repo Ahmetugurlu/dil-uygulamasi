@@ -151,6 +151,13 @@ body.lexend{--read:"Lexend","Andika","Segoe UI",system-ui,sans-serif}
 .seg{display:flex;gap:6px}
 .seg button{border-radius:999px;padding:8px 14px;font-weight:800;font-size:16px;background:#efe6d2;color:var(--ink)}
 .seg button.on{background:var(--grass);color:#fff}
+/* ayna harfler ve ses treni */
+.flip{display:inline-block}
+.train{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.train .car{width:62px;height:62px;border-radius:14px 14px 22px 22px;background:#efe6d2;border-bottom:8px solid #cbbd9c;display:grid;place-items:center;font-family:var(--read);font-weight:700;font-size:38px;transition:background .2s,transform .2s}
+.train .car.hid{display:none}
+.train{min-height:70px}
+.train .car.lit{background:var(--sun);border-bottom-color:#d79a12;transform:translateY(-6px)}
 /* yeni oyunlar */
 .pic.small{font-size:60px}
 .go.small{font-size:20px;padding:8px 24px}
@@ -257,9 +264,11 @@ const PICS = [
 const ISLANDS = [
   {id:'ses',    name:'Ses Adası',          icon:'🌴', sticker:'🦜', plan:['meet','pickLetter:o','startLetter','pickLetter','startLetter:o','pickLetter','startLetter']},
   {id:'iz',     name:'Harf İzleme Tepesi', icon:'✏️', sticker:'🦒', plan:L.map(a=>'trace:'+a)},
+  {id:'ayna',   name:'Ayna Gölü',          icon:'🪞', sticker:'🦓', plan:['mirror','reversal','mirror','reversal','mirror','reversal']},
   {id:'hece',   name:'Hece Köprüsü',       icon:'🌉', sticker:'🐢', plan:['blend','buildSyl','blend','buildSyl','blend','buildSyl']},
   {id:'balon',  name:'Balon Şenliği',      icon:'🎈', sticker:'🐼', plan:['balloonL','balloonS','balloonL','balloonS']},
   {id:'boya',   name:'Boyama Bahçesi',     icon:'🎨', sticker:'🦩', plan:['paint','paint','paint']},
+  {id:'tren',   name:'Ses Treni',          icon:'🚂', sticker:'🦔', plan:['blendSounds','countSounds','lastSound','blendSounds','countSounds','lastSound']},
   {id:'kelime', name:'Kelime Ormanı',      icon:'🌳', sticker:'🦁', plan:['buildWord','buildWord','buildWord','buildWord','buildWord','buildWord']},
   {id:'sela',   name:'Hece Şelalesi',      icon:'💦', sticker:'🐬', plan:['countSyl','splitWord','countSyl','splitWord','countSyl','splitWord']},
   {id:'esle',   name:'Eşleştirme Koyu',    icon:'⚓', sticker:'🐨', plan:['match','match','match','match']},
@@ -268,10 +277,10 @@ const ISLANDS = [
   {id:'cumle',  name:'Cümle Kalesi',       icon:'🏰', sticker:'👑', plan:['sentPic','sentOrder','sentPic','sentOrder','sentPic','sentOrder']},
   {id:'hazine', name:'Hazine Adası',       icon:'💰', sticker:'🏆', plan:'mix'}
 ];
-const MIX = ['pickLetter','startLetter','blend','buildSyl','buildWord','countSyl','splitWord','missing','sentPic','sentOrder','trace','paint','match','balloonL','balloonS','balloonW'];
+const MIX = ['pickLetter','startLetter','blend','buildSyl','buildWord','countSyl','splitWord','missing','sentPic','sentOrder','trace','paint','match','balloonL','balloonS','balloonW','mirror','reversal','blendSounds','countSounds','lastSound'];
 // Sabit sıra: yedek kodu sticker'ları bu listedeki sıra numarasıyla saklar. Sadece sona ekleyin.
 const ALL_STICKERS = ['🦜','🐢','🦁','🐬','💎','👑','🏆','🐙','🦄','🐲','🚀','⛵','🗺️','🌈','⭐','🍦','🎈','🦖','🐝','🌻','🍉','🦋','🐳','🧁',
-  '🦒','🦩','🐼','🐨','🦉','🍭','🐞','🐧'];
+  '🦒','🦩','🐼','🐨','🦉','🍭','🐞','🐧','🦓','🦔','🐸','🍒'];
 const EXTRA = ALL_STICKERS.filter(s=>!ISLANDS.some(i=>i.sticker===s));
 const PRAISE = [`Aferin ${CHILD}!`,`Harikasın ${CHILD}!`,`Süpersin ${CHILD}!`,`Çok güzel ${CHILD}!`,`Devam et ${CHILD}!`,'Bravo!'];
 const TRY = [`Başarabilirsin ${CHILD}!`,`Bir daha dene ${CHILD}!`,'Neredeyse!'];
@@ -284,6 +293,7 @@ const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.f
 const pickN = (a,n,ex=[]) => shuffle(a.filter(x=>!ex.includes(x))).slice(0,n);
 const up = s => s.toLocaleUpperCase('tr');
 const low = s => s.toLocaleLowerCase('tr');
+const SOUND_WORDS = WORDS.filter(w=>w.w===low(w.w) && w.w.length<=4 && w.e!=='👵');
 
 /* ---------- kayıt ---------- */
 const KEY = 'anetil-macera-v1';
@@ -386,6 +396,16 @@ const G = {
   balloonL(){ const a=rnd(L); return {type:'balloon', key:'l'+a, target:a, pool:L, need:5}; },
   balloonS(){ const s=rnd(SYLS); const near=SYLS.filter(x=>x!==s && (x[0]===s[0] || x[1]===s[1] || x===s[1]+s[0]));
     return {type:'balloon', key:'h'+s, target:s, pool:[s,...near.slice(0,5)], need:5}; },
+  // Ayna harfler: disleksili çocuklar harfin yönünü karıştırabilir. n'nin yalnız ters hâli (u gibi) belirgin farklıdır.
+  mirror(){ const T={a:['scaleX(-1)','scaleY(-1)','rotate(180deg)'], e:['scaleX(-1)','scaleY(-1)','rotate(180deg)'], t:['scaleX(-1)','scaleY(-1)','rotate(180deg)'], n:['rotate(180deg)']};
+    const a=rnd(Object.keys(T)); return {type:'mirror', key:'r'+a, letter:a, options:shuffle(['none',...T[a]])}; },
+  // Ters okunan heceler: on/no, at/ta...
+  reversal(){ const P=[['at','ta'],['el','le'],['an','na'],['ot','to'],['on','no'],['al','la'],['et','te'],['il','li'],['ol','lo'],['in','ni'],['tel','let'],['ton','not'],['net','ten']];
+    const pr=rnd(P), ans=rnd(pr); return {type:'reversal', key:'v'+ans, answer:ans, options:shuffle(pr)}; },
+  // Ses farkındalığı: kelimenin seslerini tek tek duyup birleştirme, sayma, son sesi bulma.
+  blendSounds(){ const w=rnd(SOUND_WORDS); return {type:'blendSounds', key:'u'+w.w, w, answer:w.e, options:shuffle([w.e,...pickN([...new Set(SOUND_WORDS.map(x=>x.e))],2,[w.e])])}; },
+  countSounds(){ const w=rnd(SOUND_WORDS); return {type:'countSounds', key:'z'+w.w, w, answer:w.w.length}; },
+  lastSound(){ const w=rnd(SOUND_WORDS), a=w.w.slice(-1); return {type:'lastSound', key:'j'+w.w, w, answer:a, options:shuffle([a,...pickN(L,2,[a])])}; },
   balloonW(){ const w=rnd(WORDS.filter(x=>x.s.length>=2 && x.s.length<=3 && x.w===low(x.w)));
     return {type:'balloonW', key:'k'+w.w, w}; }
 };
@@ -397,7 +417,7 @@ function buildRound(plan){
 }
 
 /* ---------- harita ---------- */
-const POS_X = [24,72,30,74,26,70,28,72,30,74,26,50];
+const POS_X = [24,72,30,74,26,70,28,72,30,74,26,70,30,50];
 const STEP = 170, TOP = 90;
 const starsOf = i => save.stars[ISLANDS[i].id] || 0;
 function totalStars(){ return ISLANDS.reduce((a,isl)=>a+(save.stars[isl.id]||0),0); }
@@ -578,6 +598,35 @@ function nextQ(){
     st.append(el('div','pic',q.s.e), slots, row); break;
   }
   case 'trace': renderTrace(q, st); break;
+  case 'mirror':
+    speakAfter(`Hangisi doğru yönde? Doğru ${q.letter} harfini bul!`, [{t:SND[q.letter], r:.6}]);
+    $('#bubble').innerHTML=`Hangisi doğru yönde? Doğru <b class="tgt">${q.letter}</b> harfini bul!`;
+    st.append(el('div','pic','🪞'), choices(q.options, t=>`<span class="flip" style="transform:${t}">${letHTML(q.letter)}</span>`, t=>t==='none')); break;
+  case 'reversal':
+    speakAfter('Dinle. Hangisi doğru yazılmış?', [{t:q.answer, r:.55}]);
+    st.append(el('div','pic','👂'), choices(q.options, o=>letHTML(o), o=>o===q.answer, '', ()=>say({t:q.answer,r:.6}))); break;
+  case 'blendSounds': case 'countSounds': {
+    const w=q.w.w, cars=el('div','train');
+    [...w].forEach(c=>cars.append(el('span','car'+(q.type==='countSounds'?' hid':''), q.type==='blendSounds'?letHTML(c):'')));
+    const play=()=>{ cars.querySelectorAll('.car').forEach(x=>{ x.classList.remove('lit'); if(q.type==='countSounds') x.classList.add('hid'); });
+      say([...w].map(c=>({t:SND[c], r:.5})));
+      [...w].forEach((c,k)=>setTimeout(()=>{ const x=cars.children[k]; if(x){ x.classList.remove('hid'); x.classList.add('lit'); tone([440+k*90],.08); } }, 300+k*900)); };
+    const btn=el('button','go alt small','🚂 Sesleri dinle'); btn.onclick=play; replay=play;
+    if (q.type==='blendSounds'){
+      $('#bubble').textContent='Sesleri dinle ve birleştir. Hangi resim?'; say('Sesleri dinle ve birleştir. Hangi resim?'); setTimeout(()=>{ if(round[qi]===q) play(); }, 2600);
+      st.append(cars, btn, choices(q.options, o=>o, o=>o===q.answer, 'emo', ()=>say({t:w,r:.7})));
+    } else {
+      $('#bubble').textContent='Kelimede kaç ses var? Vagonları say!'; say(['Kelimede kaç ses var?', {t:w,r:.6}]);
+      const wd=wordEl('', w);
+      st.append(el('div','pic',q.w.e), cars, btn, choices([2,3,4,5], o=>String(o), o=>o===q.answer, '', ()=>{ wd.innerHTML=letHTML(w); cars.querySelectorAll('.car').forEach((x,k)=>{ x.classList.remove('hid'); x.innerHTML=letHTML(w[k]); }); }), wd);
+    }
+    break;
+  }
+  case 'lastSound': {
+    speakAfter('Kelimenin son sesi hangisi?', [{t:q.w.w, r:.55}]);
+    const w=q.w.w, wd=wordEl(w.slice(0,-1)+'<span class="gap">?</span>', w);
+    st.append(el('div','pic',q.w.e), wd, choices(q.options, o=>letHTML(o), o=>o===q.answer, '', ()=>{ wd.innerHTML=sylHTML(w); })); break;
+  }
   case 'paint': renderPaint(q, st); break;
   case 'match': renderMatch(q, st); break;
   case 'balloon': {
@@ -609,7 +658,7 @@ function nextQ(){
 /* ---------- harf izleme ---------- */
 function renderTrace(q, st){
   const ch = q.big ? up(q.letter) : q.letter;
-  speakAfter2(`Parmağınla ${ch} harfinin üstünden geç!`, [{t:SND[q.letter], r:.6}]);
+  speakAfter2(`Parmağınla ${ch} harfinin üstünden geç, çizerken sesini söyle!`, [{t:SND[q.letter], r:.6}]);
   const size=Math.min(320, Math.max(220, st.clientWidth-8)), dpr=Math.min(2, window.devicePixelRatio||1), W=Math.round(size*dpr);
   const box=el('div','tracebox'); box.style.width=size+'px'; box.style.height=size+'px';
   const bg=el('canvas'), ink=el('canvas'); [bg,ink].forEach(c=>{ c.width=W; c.height=W; box.append(c); });
@@ -632,7 +681,8 @@ function renderTrace(q, st){
   ix.lineCap='round'; ix.lineJoin='round'; ix.lineWidth=W*.1; ix.strokeStyle='#ff7957';
   let last=null;
   const pos=e=>{ const r=ink.getBoundingClientRect(); return [(e.clientX-r.left)*W/r.width, (e.clientY-r.top)*W/r.height]; };
-  ink.addEventListener('pointerdown', e=>{ if(busy||done) return; try{ink.setPointerCapture(e.pointerId);}catch(_){} last=pos(e); ix.beginPath(); ix.arc(last[0],last[1],ix.lineWidth/2,0,7); ix.fillStyle='#ff7957'; ix.fill(); });
+  let lastSay=0;
+  ink.addEventListener('pointerdown', e=>{ if(busy||done) return; if (Date.now()-lastSay>1200){ lastSay=Date.now(); say({t:SND[q.letter],r:.6}); } try{ink.setPointerCapture(e.pointerId);}catch(_){} last=pos(e); ix.beginPath(); ix.arc(last[0],last[1],ix.lineWidth/2,0,7); ix.fillStyle='#ff7957'; ix.fill(); });
   ink.addEventListener('pointermove', e=>{ if(!last) return; const p=pos(e); ix.beginPath(); ix.moveTo(last[0],last[1]); ix.lineTo(p[0],p[1]); ix.stroke(); last=p; });
   const check=()=>{ last=null; if(!ready||done||busy) return;
     const d=ix.getImageData(0,0,W,W).data; let hit=0; mask.forEach(i=>{ if(d[i*4+3]>0) hit++; });
