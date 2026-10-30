@@ -4,6 +4,7 @@
 
 - 12 ada (sakin ve hareketli oyunlar dönüşümlü): Ses Adası, Harf İzleme Tepesi, Hece Köprüsü, Balon Şenliği, Boyama Bahçesi, Kelime Ormanı, Hece Şelalesi, Eşleştirme Koyu, Eksik Harf Mağarası, Hece Balonları, Cümle Kalesi, Hazine Adası
 - Parmakla harf izleme, gizli resim boyama, sürükle-bırak ve harf/hece balonu patlatma
+- Disleksi dostu: renkli heceler, kırmızı sesli harfler, geniş aralık, Andika/Lexend yazı tipi, yavaş konuşma, dokununca sesli okuma (⚙️ ayarlar paneli)
 - Övgüler çocuğun adıyla (`CHILD` sabiti, şu an Sezen Lina)
 - Her adada yıldız ve çıkartma toplanır (32 çıkartmalık albüm)
 - Rehber karakter: Tan (tilki)
