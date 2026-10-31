@@ -1,14 +1,20 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
 <title>ANETİL Harf Macerası</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Baloo+2:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Lexend:wght@400;600&family=Baloo+2:wght@600;700;800&display=swap">
 <style>
 /* Layout: one winding sea map of islands; each island opens a short full-screen round. Single bright world, light only. */
 :root{
   --sea:#2fb4c4; --sea-deep:#1b8ea3; --sand:#ffe8b0; --grass:#76c96a; --sun:#ffc63a;
   --coral:#ff7957; --ink:#24344f; --ink-soft:#5a6883; --card:#fffaf0; --line:#e5d6b4;
-  --ok:#3fae5a; --soft-no:#f3b6a6; --lock:#a9b4c2;
+  --ok:#3fae5a; --soft-no:#f3b6a6; --lock:#a9b4c2; --paper:#fffcf3; --syl-a:#1d5fc4; --syl-b:#cf3f2a; --ls:0em; --ws:0em;
   --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
   --read:"Andika","Comic Sans MS","Segoe UI",system-ui,sans-serif;
   color-scheme:light;
@@ -46,6 +52,12 @@ button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
 .isle.locked .blob{filter:grayscale(1) brightness(1.05);opacity:.75}
 .isle.locked .name{color:var(--ink-soft)}
 .isle .lockico{position:absolute;top:58px;right:30px;font-size:28px}
+.isle .resume{position:absolute;top:-6px;right:14px;background:var(--coral);color:#fff;font-weight:800;font-size:14px;border-radius:999px;padding:2px 10px;box-shadow:0 3px 0 #c9553a}
+.backup{margin-top:20px;display:flex;flex-direction:column;gap:8px;text-align:left;background:#fff;border:3px solid var(--line);border-radius:18px;padding:12px}
+.backup span{font-size:15px;color:var(--ink-soft);font-weight:600;line-height:1.3}
+.backup textarea,.backup input{font:600 14px/1.3 ui-monospace,Menlo,monospace;border:2px solid var(--line);border-radius:10px;padding:8px;width:100%;box-sizing:border-box;resize:none;color:var(--ink);background:var(--card);user-select:text;-webkit-user-select:text}
+.backup .go{font-size:18px;padding:8px 18px}
+#codeMsg{font-size:15px;font-weight:700;color:var(--ok);min-height:1em}
 .isle.next .blob{animation:bob 1.6s ease-in-out infinite}
 .isle .here{position:absolute;top:-34px;left:8px;font-size:40px;animation:hop 1.6s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-8px)}}
@@ -62,7 +74,7 @@ button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
 .panel{margin-top:14px;background:var(--card);border-radius:28px;padding:18px 16px 24px;box-shadow:0 8px 0 rgba(0,0,0,.15)}
 .guide{display:flex;align-items:center;gap:10px}
 .guide .fox{font-size:48px;line-height:1}
-.bubble{flex:1;min-width:0;background:#fff;border:3px solid var(--line);border-radius:20px;padding:8px 14px;font-size:clamp(18px,4.4vw,22px);font-weight:700;line-height:1.25;position:relative}
+.bubble{flex:1;min-width:0;background:var(--paper);border:3px solid var(--line);border-radius:20px;padding:8px 14px;font-size:clamp(18px,4.4vw,22px);font-weight:700;line-height:1.25;position:relative}
 .bubble::before{content:"";position:absolute;left:-12px;top:50%;margin-top:-9px;border:9px solid transparent;border-right-color:var(--line);border-left:0}
 .listen{width:62px;height:62px;border-radius:50%;background:var(--coral);color:#fff;font-size:30px;box-shadow:0 5px 0 #c9553a;flex:none}
 .listen:active{transform:translateY(4px);box-shadow:0 1px 0 #c9553a}
@@ -71,15 +83,15 @@ button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
 .word{font-family:var(--read);font-size:clamp(44px,12vw,68px);font-weight:700;letter-spacing:.04em;line-height:1.1}
 .word .gap{display:inline-block;min-width:.7em;border-bottom:6px solid var(--coral);color:var(--coral);text-align:center}
 .choices{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
-.choice{min-width:96px;min-height:96px;padding:6px 18px;border-radius:24px;background:#fff;border:4px solid var(--line);box-shadow:0 6px 0 var(--line);font-family:var(--read);font-weight:700;font-size:52px;line-height:1;transition:transform .1s}
+.choice{min-width:96px;min-height:96px;padding:6px 18px;border-radius:24px;background:var(--paper);border:4px solid var(--line);box-shadow:0 6px 0 var(--line);font-family:var(--read);font-weight:700;font-size:52px;line-height:1;transition:transform .1s}
 .choice.small{font-size:36px}
 .choice.emo{font-size:60px}
 .choice:active{transform:translateY(4px);box-shadow:0 2px 0 var(--line)}
 .choice.right{background:var(--ok);border-color:var(--ok);color:#fff;box-shadow:0 6px 0 #2b8442}
 .choice.nope{background:var(--soft-no);border-color:var(--soft-no);opacity:.55;animation:shake .4s}
 @keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-.letterwall{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%;max-width:420px}
-.letterwall .choice{width:100%;display:flex;flex-direction:column;align-items:center;gap:2px}
+.letterwall{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;width:100%;max-width:420px}
+.letterwall .choice{width:calc((100% - 28px)/3);min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px}
 .letterwall .choice small{font-size:20px;font-family:var(--display);color:var(--ink-soft)}
 .letterwall .choice.heard{background:#fff3c4;border-color:var(--sun);box-shadow:0 6px 0 #e0a92a}
 .go{background:var(--grass);color:#fff;font-weight:800;font-size:26px;padding:12px 32px;border-radius:999px;box-shadow:0 6px 0 #4c9a41}
@@ -105,7 +117,7 @@ button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
 .claps span{display:inline-block;animation:pop .3s}
 
 /* result + album */
-.over{position:fixed;inset:0;background:rgba(20,40,60,.55);display:grid;place-items:center;padding:20px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));z-index:20}
+.over{position:fixed;inset:0;overflow-y:auto;align-items:safe center;background:rgba(20,40,60,.55);display:grid;place-items:center;padding:20px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));z-index:20}
 .card-big{background:var(--card);border-radius:30px;padding:24px 20px;max-width:420px;width:100%;text-align:center;box-shadow:0 10px 0 rgba(0,0,0,.2);box-sizing:border-box}
 .card-big h2{margin:0;font-size:34px;line-height:1.1}
 .bigstars{font-size:62px;letter-spacing:6px;margin:8px 0;color:var(--sun);text-shadow:0 4px 0 #d79a12}
@@ -124,13 +136,71 @@ button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
 .fx{position:fixed;inset:0;pointer-events:none;z-index:30;overflow:hidden}
 .fx i{position:absolute;width:12px;height:16px;border-radius:3px;animation:fall 1.1s ease-out forwards}
 @keyframes fall{to{transform:translate(var(--dx),var(--dy)) rotate(540deg);opacity:0}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* disleksi dostu okuma */
+body.wide{--ls:.08em;--ws:.35em}
+body.lexend{--read:"Lexend","Andika","Segoe UI",system-ui,sans-serif}
+.word,.choice,.sentence,.slot,.cell,.balloon .bb,.target .drop,.letterwall .choice{letter-spacing:var(--ls);word-spacing:var(--ws)}
+.sentence{column-gap:calc(14px + var(--ws))}
+.sy0{color:var(--syl-a)}.sy1{color:var(--syl-b)}.lv{color:var(--syl-b)}
+.choice.right span,.choice.right .lv{color:inherit}
+.hint{display:block;font-size:22px;margin-top:4px;letter-spacing:0}
+[data-say]{cursor:pointer}
+.slot.sy0{color:var(--syl-a)}.slot.sy1{color:var(--syl-b)}
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;text-align:left;padding:10px 0;border-bottom:2px solid var(--line)}
+.setrow b{font-size:18px}.setrow small{display:block;font-size:14px;color:var(--ink-soft);font-weight:600}
+.seg{display:flex;gap:6px}
+.seg button{border-radius:999px;padding:8px 14px;font-weight:800;font-size:16px;background:#efe6d2;color:var(--ink)}
+.seg button.on{background:var(--grass);color:#fff}
+/* ayna harfler ve ses treni */
+.flip{display:inline-block}
+.train{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.train .car{width:62px;height:62px;border-radius:14px 14px 22px 22px;background:#efe6d2;border-bottom:8px solid #cbbd9c;display:grid;place-items:center;font-family:var(--read);font-weight:700;font-size:38px;transition:background .2s,transform .2s}
+.train .car.hid{display:none}
+.train{min-height:70px}
+.train .car.lit{background:var(--sun);border-bottom-color:#d79a12;transform:translateY(-6px)}
+/* yeni oyunlar */
+.pic.small{font-size:60px}
+.go.small{font-size:20px;padding:8px 24px}
+.tgt{font-family:var(--read);color:var(--coral);font-size:1.25em}
+.tile{touch-action:none}
+.tile.lifted{opacity:.35}
+.ghost{position:fixed;transform:translate(-50%,-50%) scale(1.08);pointer-events:none;z-index:40;margin:0;box-sizing:border-box}
+.choice.sel{border-color:var(--coral);box-shadow:0 6px 0 var(--coral)}
+.tracebox{position:relative;background:#fff;border:4px solid var(--line);border-radius:24px;touch-action:none;max-width:100%}
+.tracebox canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:20px}
+.tracebox.ok{border-color:var(--ok)}
+.palette{display:flex;gap:12px}
+.swatch{width:46px;height:46px;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 3px var(--line)}
+.swatch.on{box-shadow:0 0 0 4px var(--ink)}
+.paintgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;width:100%;max-width:340px}
+.cell{aspect-ratio:1;max-width:100%;border-radius:12px;background:#fff;border:3px solid var(--line);font-family:var(--read);font-weight:700;font-size:clamp(24px,7vw,34px);transition:background .2s}
+.cell.painted{background:var(--pc);border-color:var(--pc);color:rgba(255,255,255,.9);animation:pop .3s}
+.reveal{font-size:84px;animation:pop .5s}
+.targets{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.target{width:100px;min-height:140px;border-radius:20px;background:#fff;border:4px dashed var(--line);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:8px 4px;font-size:54px;box-sizing:border-box}
+.target .drop{font-family:var(--read);font-size:24px;font-weight:700;min-height:32px}
+.target.done{border-style:solid;border-color:var(--ok);background:#e8f7ea}
+.counter{display:flex;gap:8px}
+.counter span{width:26px;height:26px;border-radius:50%;background:#efe6d2}
+.counter span.on{background:var(--sun);animation:pop .3s}
+.sky{position:relative;width:100%;height:380px;border-radius:22px;overflow:hidden;background:linear-gradient(#bfeefa,#effcff)}
+.balloon{position:absolute;bottom:-140px;width:86px;height:130px;margin-left:-43px;animation:rise linear forwards;touch-action:manipulation}
+.balloon .bb{position:absolute;top:0;left:0;width:86px;height:104px;border-radius:50% 50% 47% 47%/55% 55% 45% 45%;background:var(--h);color:#fff;font-family:var(--read);font-weight:700;font-size:34px;display:grid;place-items:center;box-shadow:inset -10px -8px 0 rgba(0,0,0,.12);text-shadow:0 2px 0 rgba(0,0,0,.25);transition:transform .25s,opacity .25s}
+.balloon::after{content:"";position:absolute;top:104px;left:42px;width:2px;height:26px;background:rgba(36,52,79,.35)}
+.balloon.pop{animation-play-state:paused}
+.balloon.pop .bb{transform:scale(1.7);opacity:0}
+.balloon.pop::after{opacity:0}
+@keyframes rise{to{transform:translateY(-560px)}}
+@media (prefers-reduced-motion:reduce){*:not(.balloon){animation:none!important;transition:none!important}}
 </style>
 
+</head>
+<body>
 <div class="app">
   <header class="top">
-    <div class="brand"><span class="fox" aria-hidden="true">🦊</span><h1>ANETİL Harf Macerası<small>Tan ile ses ve hece avı</small></h1></div>
+    <div class="brand"><span class="fox" aria-hidden="true">🦊</span><h1>Sezen Lina'nın Harf Macerası<small>A N E T İ L O · Tan ile ses ve hece avı</small></h1></div>
     <button class="pill btn" id="soundBtn" aria-label="Sesi aç/kapat">🔊</button>
+    <button class="pill btn" id="setBtn" aria-label="Okuma ayarları">⚙️</button>
     <button class="pill btn" id="albumBtn" aria-label="Sticker albümü">📒 <span id="stkCount">0</span></button>
     <div class="pill" aria-label="Toplam yıldız">⭐ <span id="starCount">0</span></div>
   </header>
@@ -160,38 +230,60 @@ button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
 
 <script>
 /* ---------- veri ---------- */
-const L = ['a','n','e','t','i','l'];
-const CONS = ['n','t','l'], VOW = ['a','e','i'];
+const CHILD = 'Sezen Lina';
+const L = ['a','n','e','t','i','l','o'];
+const CONS = ['n','t','l'], VOW = ['a','e','i','o'];
 // Ünsüzleri tek başına söyletiyoruz; motor harfi kendi bildiği gibi okur.
-const SND = {a:'a', n:'n', e:'e', t:'t', i:'i', l:'l'};
-const LW = {a:['at','🐴'], n:['nane','🌿'], e:['el','✋'], t:['tel','🧵'], i:['ilan','📢'], l:['lale','🌷']};
-const SYLS = ['na','ne','ni','ta','te','ti','la','le','li','an','en','in','at','et','al','el','il'];
+const SND = {a:'a', n:'n', e:'e', t:'t', i:'i', l:'l', o:'o'};
+const LW = {a:['at','🐴'], n:['nota','🎵'], e:['el','✋'], t:['ton','🐟'], i:['ilan','📢'], l:['lale','🌷'], o:['olta','🎣']};
+const SYLS = ['na','ne','ni','no','ta','te','ti','to','la','le','li','lo','an','en','in','on','at','et','ot','al','el','il','ol'];
 const WORDS = [
-  {w:'at',s:['at'],e:'🐴'},{w:'et',s:['et'],e:'🥩'},{w:'el',s:['el'],e:'✋'},{w:'tel',s:['tel'],e:'🧵'},{w:'tat',s:['tat'],e:'😋'},{w:'alt',s:['alt'],e:'⬇️'},
+  {w:'at',s:['at'],e:'🐴'},{w:'et',s:['et'],e:'🥩'},{w:'el',s:['el'],e:'✋'},{w:'tel',s:['tel'],e:'🧵'},
+  {w:'ot',s:['ot'],e:'🌱'},{w:'on',s:['on'],e:'🔟'},{w:'ton',s:['ton'],e:'🐟'},
   {w:'ana',s:['a','na'],e:'👩'},{w:'anne',s:['an','ne'],e:'👩‍👧'},{w:'nine',s:['ni','ne'],e:'👵'},{w:'nane',s:['na','ne'],e:'🌿'},
   {w:'lale',s:['la','le'],e:'🌷'},{w:'lila',s:['li','la'],e:'💜'},{w:'alet',s:['a','let'],e:'🔧'},{w:'ilan',s:['i','lan'],e:'📢'},
   {w:'atla',s:['at','la'],e:'🦘'},{w:'tatil',s:['ta','til'],e:'🏖️'},{w:'anten',s:['an','ten'],e:'📡'},{w:'telli',s:['tel','li'],e:'🎸'},
-  {w:'anlat',s:['an','lat'],e:'🗣️'},{w:'ilet',s:['i','let'],e:'📨'},{w:'Ali',s:['A','li'],e:'👦'},{w:'Ela',s:['E','la'],e:'👧'},
-  {w:'Atilla',s:['A','til','la'],e:'🧒'},{w:'naneli',s:['na','ne','li'],e:'🍵'},{w:'laleli',s:['la','le','li'],e:'💐'},
+  {w:'olta',s:['ol','ta'],e:'🎣'},{w:'nota',s:['no','ta'],e:'🎵'},{w:'otel',s:['o','tel'],e:'🏨'},{w:'alo',s:['a','lo'],e:'☎️'},{w:'oto',s:['o','to'],e:'🚗'},
+  {w:'Ali',s:['A','li'],e:'👦'},{w:'Ela',s:['E','la'],e:'👧'},
+  {w:'naneli',s:['na','ne','li'],e:'🍵'},{w:'laleli',s:['la','le','li'],e:'💐'},
   {w:'anneanne',s:['an','ne','an','ne'],e:'👵'}
 ];
 const SENT = [
-  {t:'Ali, atla!',e:'🦘'},{t:'Ela lale al.',e:'🌷'},{t:'Nine nane al.',e:'🌿'},{t:'Anne, tel al.',e:'🧵'},
-  {t:'Ali ile Ela.',e:'👫'},{t:'Anne, anlat!',e:'🗣️'},{t:'Ela, tatil!',e:'🏖️'},{t:'Ali, anten al.',e:'📡'}
+  {t:'Ali ata ot at.',e:'🐴'},{t:'Ela, olta al.',e:'🎣'},{t:'Nine nane al.',e:'🌿'},{t:'Anne, tel al.',e:'🧵'},
+  {t:'Ali ile Ela.',e:'👫'},{t:'Anne, alo!',e:'☎️'},{t:'Ela, tatil!',e:'🏖️'},{t:'Ali, nota al.',e:'🎵'},
+  {t:'On tane ot al.',e:'🌱'},{t:'Ela lale al.',e:'🌷'}
 ];
+// Gizli resimler: # olan kutularda hedef harf var.
+const PICS = [
+  {g:'.#.#.|#####|#####|.###.|..#..', e:'❤️'},
+  {g:'..#..|.###.|#####|..#..|..#..', e:'🌲'},
+  {g:'..#..|..##.|..#..|#####|.###.', e:'⛵'},
+  {g:'..#..|.###.|#.#.#|..#..|..#..', e:'⬆️'}
+];
+// Sıra: sakin bir ada ile hareketli bir ada dönüşümlü gelir.
 const ISLANDS = [
-  {name:'Ses Adası',icon:'🌴',sticker:'🦜',plan:['meet','pickLetter','startLetter','pickLetter','startLetter','pickLetter','startLetter']},
-  {name:'Hece Köprüsü',icon:'🌉',sticker:'🐢',plan:['blend','buildSyl','blend','buildSyl','blend','buildSyl']},
-  {name:'Kelime Ormanı',icon:'🌳',sticker:'🦁',plan:['buildWord','buildWord','buildWord','buildWord','buildWord','buildWord']},
-  {name:'Hece Şelalesi',icon:'💦',sticker:'🐬',plan:['countSyl','splitWord','countSyl','splitWord','countSyl','splitWord']},
-  {name:'Eksik Harf Mağarası',icon:'🦇',sticker:'💎',plan:['missing','missing','missing','missing','missing','missing']},
-  {name:'Cümle Kalesi',icon:'🏰',sticker:'👑',plan:['sentPic','sentOrder','sentPic','sentOrder','sentPic','sentOrder']},
-  {name:'Hazine Adası',icon:'💰',sticker:'🏆',plan:'mix'}
+  {id:'ses',    name:'Ses Adası',          icon:'🌴', sticker:'🦜', plan:['meet','pickLetter:o','startLetter','pickLetter','startLetter:o','pickLetter','startLetter']},
+  {id:'iz',     name:'Harf İzleme Tepesi', icon:'✏️', sticker:'🦒', plan:L.map(a=>'trace:'+a)},
+  {id:'ayna',   name:'Ayna Gölü',          icon:'🪞', sticker:'🦓', plan:['mirror','reversal','mirror','reversal','mirror','reversal']},
+  {id:'hece',   name:'Hece Köprüsü',       icon:'🌉', sticker:'🐢', plan:['blend','buildSyl','blend','buildSyl','blend','buildSyl']},
+  {id:'balon',  name:'Balon Şenliği',      icon:'🎈', sticker:'🐼', plan:['balloonL','balloonS','balloonL','balloonS']},
+  {id:'boya',   name:'Boyama Bahçesi',     icon:'🎨', sticker:'🦩', plan:['paint','paint','paint']},
+  {id:'tren',   name:'Ses Treni',          icon:'🚂', sticker:'🦔', plan:['blendSounds','countSounds','lastSound','blendSounds','countSounds','lastSound']},
+  {id:'kelime', name:'Kelime Ormanı',      icon:'🌳', sticker:'🦁', plan:['buildWord','buildWord','buildWord','buildWord','buildWord','buildWord']},
+  {id:'sela',   name:'Hece Şelalesi',      icon:'💦', sticker:'🐬', plan:['countSyl','splitWord','countSyl','splitWord','countSyl','splitWord']},
+  {id:'esle',   name:'Eşleştirme Koyu',    icon:'⚓', sticker:'🐨', plan:['match','match','match','match']},
+  {id:'eksik',  name:'Eksik Harf Mağarası',icon:'🦇', sticker:'💎', plan:['missing','missing','missing','missing','missing','missing']},
+  {id:'hbalon', name:'Hece Balonları',     icon:'🎪', sticker:'🦉', plan:['balloonW','balloonW','balloonW','balloonW']},
+  {id:'cumle',  name:'Cümle Kalesi',       icon:'🏰', sticker:'👑', plan:['sentPic','sentOrder','sentPic','sentOrder','sentPic','sentOrder']},
+  {id:'hazine', name:'Hazine Adası',       icon:'💰', sticker:'🏆', plan:'mix'}
 ];
-const EXTRA = ['🐙','🦄','🐲','🚀','⛵','🗺️','🌈','⭐','🍦','🎈','🦖','🐝','🌻','🍉','🦋','🐳','🧁'];
-const ALL_STICKERS = [...ISLANDS.map(i=>i.sticker), ...EXTRA];
-const PRAISE = ['Harika!','Süper!','Aferin!','Çok güzel!','Bravo!','Muhteşem!'];
-const TRY = ['Bir daha dene!','Neredeyse!','Sen yaparsın!'];
+const MIX = ['pickLetter','startLetter','blend','buildSyl','buildWord','countSyl','splitWord','missing','sentPic','sentOrder','trace','paint','match','balloonL','balloonS','balloonW','mirror','reversal','blendSounds','countSounds','lastSound'];
+// Sabit sıra: yedek kodu sticker'ları bu listedeki sıra numarasıyla saklar. Sadece sona ekleyin.
+const ALL_STICKERS = ['🦜','🐢','🦁','🐬','💎','👑','🏆','🐙','🦄','🐲','🚀','⛵','🗺️','🌈','⭐','🍦','🎈','🦖','🐝','🌻','🍉','🦋','🐳','🧁',
+  '🦒','🦩','🐼','🐨','🦉','🍭','🐞','🐧','🦓','🦔','🐸','🍒'];
+const EXTRA = ALL_STICKERS.filter(s=>!ISLANDS.some(i=>i.sticker===s));
+const PRAISE = [`Aferin ${CHILD}!`,`Harikasın ${CHILD}!`,`Süpersin ${CHILD}!`,`Çok güzel ${CHILD}!`,`Devam et ${CHILD}!`,'Bravo!'];
+const TRY = [`Başarabilirsin ${CHILD}!`,`Bir daha dene ${CHILD}!`,'Neredeyse!'];
 
 /* ---------- yardımcılar ---------- */
 const $ = s => document.querySelector(s);
@@ -201,12 +293,42 @@ const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.f
 const pickN = (a,n,ex=[]) => shuffle(a.filter(x=>!ex.includes(x))).slice(0,n);
 const up = s => s.toLocaleUpperCase('tr');
 const low = s => s.toLocaleLowerCase('tr');
+const SOUND_WORDS = WORDS.filter(w=>w.w===low(w.w) && w.w.length<=4 && w.e!=='👵');
 
 /* ---------- kayıt ---------- */
 const KEY = 'anetil-macera-v1';
-let save = {stars:{}, plays:{}, stickers:[], sound:true};
-try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) save = Object.assign(save, s); } catch(e){}
+const OLD_IDS = ['ses','hece','kelime','sela','eksik','cumle','hazine']; // ilk sürümde adalar sıra numarasıyla kayıtlıydı
+const byId = o => { const r={}; Object.entries(o||{}).forEach(([k,v])=>{ r[OLD_IDS[k] ?? k]=v; }); return r; };
+let save = {v:2, stars:{}, plays:{}, stickers:[], sound:true};
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s){
+  if (!s.v){ s.stars=byId(s.stars); s.plays=byId(s.plays); if (s.cur && typeof s.cur.level==='number') s.cur.level=OLD_IDS[s.cur.level]; s.v=2; }
+  save = Object.assign(save, s); } } catch(e){}
 const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(save)); } catch(e){} };
+// Disleksi dostu okuma ayarları: hepsi varsayılan açık, anne-baba ⚙️ panelinden değiştirebilir.
+const A11Y_DEF = {syl:true, vow:true, wide:true, font:'andika', slow:true, hint:true};
+save.a11y = Object.assign({}, A11Y_DEF, save.a11y||{});
+function applyA11y(){ document.body.classList.toggle('wide', !!save.a11y.wide); document.body.classList.toggle('lexend', save.a11y.font==='lexend'); }
+const isV = c => 'aeıioöuüAEIİOÖUÜ'.includes(c);
+// Türkçe heceleme: iki ünlü arasında tek ünsüz sonraki heceye, birden fazlaysa sonuncusu sonraki heceye geçer.
+function syllables(w){
+  const ch=[...w], vi=ch.map((c,i)=>isV(c)?i:-1).filter(i=>i>=0);
+  if (vi.length<2) return [w];
+  const out=[]; let start=0;
+  for (let k=0;k<vi.length-1;k++){ const a=vi[k], b=vi[k+1], cut = b-a-1<=1 ? a+1 : b-1; out.push(ch.slice(start,cut).join('')); start=cut; }
+  out.push(ch.slice(start).join('')); return out;
+}
+const sylHTML = t => !save.a11y.syl ? t : t.split(' ').map(w=>{ let k=0; return syllables(w).map(x=>`<span class="sy${(k++)%2}">${x}</span>`).join(''); }).join(' ');
+const letHTML = t => !save.a11y.vow ? t : [...t].map(c=>isV(c)?`<span class="lv">${c}</span>`:c).join('');
+const partsHTML = t => !save.a11y.syl ? t : t.split('-').map((x,k)=>`<span class="sy${k%2}">${x}</span>`).join('-');
+const wordEl = (html, sayText) => { const d=el('div','word',html); d.dataset.say=sayText; return d; };
+persist();
+// Tarayıcıdan kaydı kendiliğinden silmemesini iste (destekleyen tarayıcılarda).
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch(e){}
+// Yedek kodu: {v, a:uygulama, s:yıldızlar, p:oynama sayısı, k:sticker sıra no}. Başka uygulamalar da aynı yapıyı kullanabilir.
+function makeCode(){ const d={v:2,a:'okuma',s:save.stars,p:save.plays,k:save.stickers.map(x=>ALL_STICKERS.indexOf(x)).filter(x=>x>=0)}; return 'TAN-'+btoa(JSON.stringify(d)); }
+function readCode(c){ try { const d=JSON.parse(atob(String(c).trim().replace(/^TAN-/i,''))); if(!d||typeof d.s!=='object'||!Array.isArray(d.k)) return null;
+  if (d.a && d.a!=='okuma') return null;
+  return {stars:d.v?d.s:byId(d.s), plays:d.v?(d.p||{}):byId(d.p), stickers:d.k.map(i=>ALL_STICKERS[i]).filter(Boolean)}; } catch(e){ return null; } }
 
 /* ---------- ses ---------- */
 let trVoice = null;
@@ -218,7 +340,7 @@ function say(parts, rate=0.8){
     speechSynthesis.cancel();
     (Array.isArray(parts)?parts:[parts]).forEach(p=>{
       const u = new SpeechSynthesisUtterance(p.t ?? p); u.lang='tr-TR'; if (trVoice) u.voice=trVoice;
-      u.rate = p.r ?? rate; u.pitch = 1.1; speechSynthesis.speak(u);
+      u.rate = (p.r ?? rate) * (save.a11y.slow ? .85 : 1); u.pitch = 1.1; speechSynthesis.speak(u);
     });
   } catch(e){}
 }
@@ -245,8 +367,8 @@ function wrongSplits(w){
 }
 const G = {
   meet: () => ({type:'meet', key:'meet'}),
-  pickLetter(){ const a=rnd(L); return {type:'pickLetter', key:'p'+a, answer:a, options:shuffle([a,...pickN(L,2,[a])])}; },
-  startLetter(){ const a=rnd(L); return {type:'startLetter', key:'s'+a, answer:a, word:LW[a][0], emoji:LW[a][1], options:shuffle([a,...pickN(L,2,[a])])}; },
+  pickLetter(x){ const a=x||rnd(L); return {type:'pickLetter', key:'p'+a, answer:a, options:shuffle([a,...pickN(L,2,[a])])}; },
+  startLetter(x){ const a=x||rnd(L); return {type:'startLetter', key:'s'+a, answer:a, word:LW[a][0], emoji:LW[a][1], options:shuffle([a,...pickN(L,2,[a])])}; },
   blend(){
     const c=rnd(CONS), v=rnd(VOW), cv=Math.random()<.65, parts=cv?[c,v]:[v,c], ans=parts.join('');
     const opts=new Set([ans, parts.slice().reverse().join('')]);
@@ -265,20 +387,41 @@ const G = {
     return {type:'missing', key:'m'+w.w+idx, w, idx, answer:ans, big, options:shuffle([ans,...pickN(L,2,[ans])])}; },
   sentPic(){ const s=rnd(SENT); return {type:'sentPic', key:'q'+s.t, s, answer:s.e, options:shuffle([s.e,...pickN([...new Set(SENT.map(x=>x.e))],2,[s.e])])}; },
   sentOrder(){ const s=rnd(SENT), words=s.t.split(' '); let pool=shuffle(words); while (pool.join(' ')===s.t) pool=shuffle(words);
-    return {type:'sentOrder', key:'o'+s.t, s, words, pool}; }
+    return {type:'sentOrder', key:'o'+s.t, s, words, pool}; },
+  trace(a){ const letter=a||rnd(L), big=!a && Math.random()<.4; return {type:'trace', key:'t'+letter+big, letter, big}; },
+  paint(){ const target=rnd(L), pi=Math.floor(Math.random()*PICS.length), g=PICS[pi].g.replace(/\|/g,'');
+    return {type:'paint', key:'g'+target+pi, target, pi, cells:[...g].map(c=>c==='#'?target:rnd(L.filter(x=>x!==target)))}; },
+  match(){ const seen=new Set(), items=shuffle(WORDS.filter(w=>w.w.length<=5 && w.w===low(w.w))).filter(w=>!seen.has(w.e) && seen.add(w.e)).slice(0,3);
+    return {type:'match', key:'e'+items.map(i=>i.w).join(), items}; },
+  balloonL(){ const a=rnd(L); return {type:'balloon', key:'l'+a, target:a, pool:L, need:5}; },
+  balloonS(){ const s=rnd(SYLS); const near=SYLS.filter(x=>x!==s && (x[0]===s[0] || x[1]===s[1] || x===s[1]+s[0]));
+    return {type:'balloon', key:'h'+s, target:s, pool:[s,...near.slice(0,5)], need:5}; },
+  // Ayna harfler: disleksili çocuklar harfin yönünü karıştırabilir. n'nin yalnız ters hâli (u gibi) belirgin farklıdır.
+  mirror(){ const T={a:['scaleX(-1)','scaleY(-1)','rotate(180deg)'], e:['scaleX(-1)','scaleY(-1)','rotate(180deg)'], t:['scaleX(-1)','scaleY(-1)','rotate(180deg)'], n:['rotate(180deg)']};
+    const a=rnd(Object.keys(T)); return {type:'mirror', key:'r'+a, letter:a, options:shuffle(['none',...T[a]])}; },
+  // Ters okunan heceler: on/no, at/ta...
+  reversal(){ const P=[['at','ta'],['el','le'],['an','na'],['ot','to'],['on','no'],['al','la'],['et','te'],['il','li'],['ol','lo'],['in','ni'],['tel','let'],['ton','not'],['net','ten']];
+    const pr=rnd(P), ans=rnd(pr); return {type:'reversal', key:'v'+ans, answer:ans, options:shuffle(pr)}; },
+  // Ses farkındalığı: kelimenin seslerini tek tek duyup birleştirme, sayma, son sesi bulma.
+  blendSounds(){ const w=rnd(SOUND_WORDS); return {type:'blendSounds', key:'u'+w.w, w, answer:w.e, options:shuffle([w.e,...pickN([...new Set(SOUND_WORDS.map(x=>x.e))],2,[w.e])])}; },
+  countSounds(){ const w=rnd(SOUND_WORDS); return {type:'countSounds', key:'z'+w.w, w, answer:w.w.length}; },
+  lastSound(){ const w=rnd(SOUND_WORDS), a=w.w.slice(-1); return {type:'lastSound', key:'j'+w.w, w, answer:a, options:shuffle([a,...pickN(L,2,[a])])}; },
+  balloonW(){ const w=rnd(WORDS.filter(x=>x.s.length>=2 && x.s.length<=3 && x.w===low(x.w)));
+    return {type:'balloonW', key:'k'+w.w, w}; }
 };
 function buildRound(plan){
-  if (plan==='mix') plan = Array.from({length:8},()=>rnd(Object.keys(G).filter(k=>k!=='meet')));
+  if (plan==='mix') plan = Array.from({length:8},()=>rnd(MIX));
   const seen=new Set(), out=[];
-  plan.forEach(t=>{ let q; for (let i=0;i<12;i++){ q=G[t](); if(!seen.has(q.key)) break; } seen.add(q.key); out.push(q); });
+  plan.forEach(p=>{ const [t,arg]=p.split(':'); let q; for (let i=0;i<12;i++){ q=G[t](arg); if(!seen.has(q.key)) break; } seen.add(q.key); out.push(q); });
   return out;
 }
 
 /* ---------- harita ---------- */
-const POS = [[24,0],[72,1],[30,2],[74,3],[26,4],[70,5],[50,6]];
+const POS_X = [24,72,30,74,26,70,28,72,30,74,26,70,30,50];
 const STEP = 170, TOP = 90;
-function totalStars(){ return Object.values(save.stars).reduce((a,b)=>a+b,0); }
-function unlocked(i){ return i===0 || save.stars[i-1]>0; }
+const starsOf = i => save.stars[ISLANDS[i].id] || 0;
+function totalStars(){ return ISLANDS.reduce((a,isl)=>a+(save.stars[isl.id]||0),0); }
+function unlocked(i){ return i===0 || starsOf(i-1)>0 || starsOf(i)>0; }
 function renderHeader(){
   $('#starCount').textContent = totalStars();
   $('#stkCount').textContent = save.stickers.length;
@@ -289,30 +432,40 @@ function renderMap(){
   const m=$('#map'); m.innerHTML='';
   const H = TOP*2 + STEP*(ISLANDS.length-1);
   m.style.height = H+'px';
-  const pts = POS.map(([x,i])=>[x, TOP+i*STEP]);
+  const pts = ISLANDS.map((_,i)=>[POS_X[i], TOP+i*STEP]);
   let d = `M${pts[0][0]} ${pts[0][1]}`;
   for (let i=1;i<pts.length;i++){ const [x0,y0]=pts[i-1],[x1,y1]=pts[i]; d+=` C${x0} ${y0+STEP/2} ${x1} ${y1-STEP/2} ${x1} ${y1}`; }
   m.innerHTML = `<svg viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 16" vector-effect="non-scaling-stroke"/></svg>`;
-  const nextIdx = ISLANDS.findIndex((_,i)=>unlocked(i) && !save.stars[i]);
+  const nextIdx = ISLANDS.findIndex((_,i)=>unlocked(i) && !starsOf(i));
+  let focus=null;
   ISLANDS.forEach((isl,i)=>{
-    const lock=!unlocked(i), s=save.stars[i]||0;
+    const lock=!unlocked(i), s=starsOf(i), resume=save.cur && save.cur.level===isl.id;
     const b=el('button','isle'+(lock?' locked':'')+(i===nextIdx?' next':''));
     b.style.left=pts[i][0]+'%'; b.style.top=pts[i][1]+'px';
     b.innerHTML = `<span class="blob">${isl.icon}</span><span class="name">${isl.name}</span>`+
       `<span class="st">${lock?'':[0,1,2].map(k=>`<span class="${k<s?'':'off'}">★</span>`).join('')}</span>`+
-      (lock?'<span class="lockico">🔒</span>':'')+(i===nextIdx?'<span class="here" aria-hidden="true">🦊</span>':'');
+      (lock?'<span class="lockico">🔒</span>':'')+(i===nextIdx?'<span class="here" aria-hidden="true">🦊</span>':'')+(resume?'<span class="resume">▶ Devam</span>':'');
     b.setAttribute('aria-label', isl.name + (lock?' (kilitli)':''));
     b.onclick = () => { if (lock){ tone([300,240]); say('Önce önceki adayı bitir!'); b.animate([{transform:'translate(-50%,-50%) rotate(-4deg)'},{transform:'translate(-50%,-50%) rotate(4deg)'},{transform:'translate(-50%,-50%)'}],{duration:300}); } else startLevel(i); };
     m.append(b);
+    if (resume || (i===nextIdx && !focus)) focus=b;
   });
+  // Haritayı sıradaki adaya kaydır, uzun yolu her seferinde aşağı kaydırmak gerekmesin.
+  if (focus && !$('#mapScreen').hidden) requestAnimationFrame(()=>{ const y=focus.getBoundingClientRect().top+window.scrollY-window.innerHeight/2; if (y>0) window.scrollTo(0,y); });
 }
 
 /* ---------- oyun ---------- */
-let G_level=0, round=[], qi=0, mistakes=0, busy=false, replay=()=>{};
+let G_level=0, round=[], qi=0, mistakes=0, busy=false, replay=()=>{}, cleanups=[];
+const cleanup = () => { cleanups.forEach(f=>{ try{f();}catch(e){} }); cleanups=[]; };
 function show(id){ ['mapScreen','playScreen'].forEach(s=>$('#'+s).hidden = s!==id); window.scrollTo(0,0); }
-function startLevel(i){ G_level=i; round=buildRound(ISLANDS[i].plan); qi=0; mistakes=0; show('playScreen'); nextQ(); }
+function startLevel(i, fresh){
+  G_level=i; const c=save.cur, id=ISLANDS[i].id;
+  if (!fresh && c && c.level===id && Array.isArray(c.round) && c.qi<c.round.length){ round=c.round; qi=c.qi; mistakes=c.mistakes||0; }
+  else { round=buildRound(ISLANDS[i].plan); qi=0; mistakes=0; }
+  show('playScreen'); nextQ();
+}
 function renderSteps(){ const s=$('#steps'); s.innerHTML=''; round.forEach((_,k)=>s.append(el('span',k<qi?'done':k===qi?'now':'',k<qi?'🐾':''))); }
-function praise(){ busy=true; tone([523,659,784,1046]); burst(); say(rnd(PRAISE), .95); setTimeout(()=>{ qi++; qi<round.length?nextQ():finish(); }, 1500); }
+function praise(){ busy=true; tone([523,659,784,1046]); burst(); say(rnd(PRAISE), .95); setTimeout(()=>{ cleanup(); qi++; qi<round.length?nextQ():finish(); }, 1600); }
 function oops(b, keep){ mistakes++; tone([330,262],.13); if(b && keep){ b.animate([{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'none'}],{duration:300}); } else if(b){ b.classList.add('nope'); b.disabled=true; } say(rnd(TRY), .95); }
 function choices(opts, fmt, isRight, cls='', after){
   const row=el('div','choices');
@@ -321,18 +474,67 @@ function choices(opts, fmt, isRight, cls='', after){
 }
 const cased = (ch,big) => big ? up(ch) : ch;
 
+// Sürükle-bırak: parmakla sürüklenen kopya; bırakılan yerdeki öğe onDrop'a verilir. Dokunmak da çalışmaya devam eder.
+function draggable(btn, onDrop){
+  let sx=0, sy=0, ghost=null, pid=null;
+  btn.addEventListener('pointerdown', e=>{ if(busy || btn.disabled) return; sx=e.clientX; sy=e.clientY; pid=e.pointerId; try{btn.setPointerCapture(pid);}catch(_){} });
+  btn.addEventListener('pointermove', e=>{
+    if (pid!==e.pointerId) return;
+    if (!ghost && Math.hypot(e.clientX-sx, e.clientY-sy)>10){
+      const r=btn.getBoundingClientRect(); ghost=btn.cloneNode(true); ghost.classList.add('ghost');
+      ghost.style.width=r.width+'px'; ghost.style.height=r.height+'px'; document.body.append(ghost); btn.classList.add('lifted');
+    }
+    if (ghost){ ghost.style.left=e.clientX+'px'; ghost.style.top=e.clientY+'px'; }
+  });
+  const end = drop => e => {
+    if (pid!==e.pointerId) return; pid=null;
+    if (!ghost) return;
+    ghost.remove(); ghost=null; btn.classList.remove('lifted'); btn.dataset.dragged='1'; setTimeout(()=>delete btn.dataset.dragged, 60);
+    if (drop && !busy) onDrop(document.elementFromPoint(e.clientX, e.clientY));
+  };
+  btn.addEventListener('pointerup', end(true)); btn.addEventListener('pointercancel', end(false));
+}
+// Hece/kelime dizme: dokun ya da kutulara sürükle.
+function slotTask(parts, pool, {cls='', sent=false, onPlace, onDone, fmt=x=>x, sylSlots=false}){
+  const slots=el('div','slots'+(sent?' sent':'')); parts.forEach(()=>slots.append(el('div','slot','')));
+  let k=0; const row=el('div','choices');
+  const tryPlace=(p,b)=>{ if(busy || b.classList.contains('used')) return;
+    if (p===parts[k]){ slots.children[k].innerHTML=fmt(p); slots.children[k].classList.add('fill'); if (sylSlots && save.a11y.syl) slots.children[k].classList.add('sy'+(k%2)); b.classList.add('used'); tone([660]); k++;
+      if (k===parts.length) onDone(); else onPlace(p); }
+    else oops(b,true); };
+  pool.forEach(p=>{ const b=el('button','choice tile '+cls,fmt(p)); b.onclick=()=>{ if(!b.dataset.dragged) tryPlace(p,b); };
+    draggable(b, under=>{ if(under && under.closest('.slots')) tryPlace(p,b); }); row.append(b); });
+  return [slots,row];
+}
+// Balon alanı: balonlar aşağıdan süzülür, dokununca patlar.
+function sky(pick, onPop){
+  const f=el('div','sky'); const cols=['#ff7957','#ffc63a','#76c96a','#2fb4c4','#b07cff','#ff8fc7'];
+  let lanes=[];
+  const spawn=()=>{ if(!f.isConnected) return;
+    if (!lanes.length) lanes=shuffle([16,39,62,85]); // şeritler: balonlar üst üste binmesin
+    const txt=pick(), b=el('button','balloon',`<span class="bb">${txt}</span>`);
+    b.style.left=(lanes.pop()+Math.random()*4-2)+'%'; b.style.setProperty('--h', rnd(cols)); b.style.animationDuration=(9500+Math.random()*2500)+'ms';
+    b.onclick=()=>{ if(b.dataset.popped || busy) return; onPop(txt,b); };
+    b.addEventListener('animationend', ()=>b.remove()); f.append(b); };
+  const timers=[setTimeout(spawn,100), setTimeout(spawn,700), setInterval(spawn,1700)];
+  cleanups.push(()=>timers.forEach(t=>{clearTimeout(t); clearInterval(t);}));
+  return f;
+}
+function popBalloon(b){ b.dataset.popped='1'; b.classList.add('pop'); tone([880,1320],.06); setTimeout(()=>b.remove(),300); }
+
 function nextQ(){
-  busy=false; renderSteps();
+  cleanup(); busy=false; renderSteps();
+  save.cur={level:ISLANDS[G_level].id, round, qi, mistakes}; persist();
   const q=round[qi], st=$('#stage'); st.innerHTML='';
   const speakAfter = (prompt, parts) => { replay=()=>say(parts); $('#bubble').textContent=prompt; say([prompt, ...parts]); };
   $('#listenBtn').hidden=false;
 
   switch(q.type){
   case 'meet': {
-    $('#bubble').textContent='Harflerle tanış! Her harfe dokun, sesini dinle.';
-    replay=()=>say('Harflerle tanış! Her harfe dokun, sesini dinle.'); replay();
+    $('#bubble').textContent=`Merhaba ${CHILD}! Her harfe dokun, sesini dinle.`;
+    replay=()=>say(`Merhaba ${CHILD}! Her harfe dokun, sesini dinle.`); replay();
     const wall=el('div','letterwall'), heard=new Set(), go=el('button','go','Hazırım!'); go.disabled=true;
-    L.forEach(a=>{ const b=el('button','choice',`${up(a)} ${a}<small>${LW[a][1]} ${LW[a][0]}</small>`);
+    L.forEach(a=>{ const b=el('button','choice',`${letHTML(up(a))} ${letHTML(a)}<small>${LW[a][1]} ${LW[a][0]}</small>`);
       b.onclick=()=>{ say([SND[a], {t:LW[a][0], r:.7}]); b.classList.add('heard'); heard.add(a); tone([660]); if(heard.size===L.length){ go.disabled=false; go.animate([{transform:'scale(1)'},{transform:'scale(1.15)'},{transform:'scale(1)'}],{duration:500}); } };
       wall.append(b); });
     go.onclick=()=>{ if(!busy) praise(); };
@@ -340,11 +542,11 @@ function nextQ(){
   }
   case 'pickLetter':
     speakAfter('Sesi dinle. Hangi harf?', [{t:SND[q.answer], r:.6}]);
-    st.append(el('div','pic','👂'), choices(q.options, o=>o, o=>o===q.answer)); break;
+    st.append(el('div','pic','👂'), choices(q.options, o=>letHTML(o)+(save.a11y.hint?`<span class="hint">${LW[o][1]}</span>`:''), o=>o===q.answer)); break;
   case 'startLetter':
     speakAfter('Bu kelime hangi sesle başlıyor?', [{t:q.word, r:.6}]);
-    st.append(el('div','pic',q.emoji), el('div','word',q.word.replace(/^./,'<span class="gap">?</span>')),
-      choices(q.options, o=>o, o=>o===q.answer, '', ()=>{ st.querySelector('.word').textContent=q.word; }));
+    st.append(el('div','pic',q.emoji), wordEl(q.word.replace(/^./,'<span class="gap">?</span>'), q.word),
+      choices(q.options, o=>letHTML(o), o=>o===q.answer, '', ()=>{ st.querySelector('.word').innerHTML=sylHTML(q.word); }));
     break;
   case 'blend': {
     const row=el('div','blendrow'); q.parts.forEach(p=>row.append(el('div','card'+(VOW.includes(p)?' v':''),p)));
@@ -353,78 +555,203 @@ function nextQ(){
     btn.onclick=doBlend;
     $('#bubble').textContent='İki sesi birleştir! Hangi hece oldu?'; say('İki sesi birleştir! Hangi hece oldu?');
     replay=doBlend;
-    st.append(row, btn, choices(q.options, o=>o, o=>o===q.answer, 'small')); break;
+    st.append(row, btn, choices(q.options, o=>letHTML(o), o=>o===q.answer, 'small')); break;
   }
   case 'buildSyl': {
-    speakAfter('Duyduğun heceyi kur!', [{t:q.answer, r:.55}]);
-    const slots=el('div','slots'); q.parts.forEach(()=>slots.append(el('div','slot','')));
-    let k=0; const pool=el('div','choices');
-    q.pool.forEach(p=>{ const b=el('button','choice tile',p); b.onclick=()=>{ if(busy) return;
-      if(p===q.parts[k]){ slots.children[k].textContent=p; slots.children[k].classList.add('fill'); b.classList.add('used'); tone([660]); say({t:p,r:.6}); k++; if(k===q.parts.length){ setTimeout(()=>say({t:q.answer,r:.6}),300); praise(); } }
-      else oops(b,true); }; pool.append(b); });
-    st.append(el('div','pic','🌉'), slots, pool); break;
+    speakAfter('Duyduğun heceyi kur! Harfleri kutulara sürükle.', [{t:q.answer, r:.55}]);
+    const [slots,row]=slotTask(q.parts, q.pool, {fmt:letHTML, onPlace:p=>say({t:p,r:.6}), onDone:()=>{ setTimeout(()=>say({t:q.answer,r:.6}),300); praise(); }});
+    st.append(el('div','pic','🌉'), slots, row); break;
   }
   case 'buildWord': {
-    const sy=q.w.s; speakAfter('Heceleri sırayla diz, kelimeyi kur!', [{t:q.w.w, r:.6}]);
-    const slots=el('div','slots'); sy.forEach(()=>slots.append(el('div','slot','')));
-    let k=0; const pool=el('div','choices');
-    q.pool.forEach(p=>{ const b=el('button','choice small tile',p); b.onclick=()=>{ if(busy) return;
-      if(p===sy[k]){ slots.children[k].textContent=p; slots.children[k].classList.add('fill'); b.classList.add('used'); tone([660]); k++;
-        if(k===sy.length){ busy=true; say([...sy.map(s=>({t:low(s),r:.55})), {t:q.w.w,r:.7}]); setTimeout(()=>{ busy=false; praise(); }, 400); } else say({t:low(p),r:.6}); }
-      else oops(b,true); }; pool.append(b); });
-    st.append(el('div','pic',q.w.e), slots, pool); break;
+    const sy=q.w.s; speakAfter('Heceleri sırayla kutulara sürükle, kelimeyi kur!', [{t:q.w.w, r:.6}]);
+    const [slots,row]=slotTask(sy, q.pool, {cls:'small', sylSlots:true, onPlace:p=>say({t:low(p),r:.6}),
+      onDone:()=>{ busy=true; say([...sy.map(s=>({t:low(s),r:.55})), {t:q.w.w,r:.7}]); setTimeout(()=>{ busy=false; praise(); }, 400); }});
+    st.append(el('div','pic',q.w.e), slots, row); break;
   }
   case 'countSyl': {
     speakAfter('Kelimeyi alkışla! Kaç hece var?', [{t:q.w.w, r:.6}]);
     const claps=el('div','claps',''), btn=el('button','go alt','👏 Alkışla');
     btn.onclick=()=>{ claps.innerHTML=''; say(q.w.s.map(s=>({t:low(s),r:.5})));
       q.w.s.forEach((_,k)=>setTimeout(()=>{ claps.append(el('span','','👏')); tone([440+k*80]); }, 200+k*700)); };
-    st.append(el('div','pic',q.w.e), el('div','word',q.w.w), btn, claps,
-      choices([1,2,3,4], o=>String(o), o=>o===q.answer)); break;
+    const wd=wordEl(q.w.w, q.w.w); st.append(el('div','pic',q.w.e), wd, btn, claps,
+      choices([1,2,3,4], o=>String(o), o=>o===q.answer, '', ()=>{ wd.innerHTML=sylHTML(q.w.w); })); break;
   }
   case 'splitWord':
     speakAfter('Hangisi doğru hecelenmiş?', [{t:q.w.w, r:.6}]);
-    st.append(el('div','pic',q.w.e), choices(q.options, o=>o, o=>o===q.answer, 'small', ()=>say(q.w.s.map(s=>({t:low(s),r:.55}))))); break;
+    st.append(el('div','pic',q.w.e), choices(q.options, o=>partsHTML(o), o=>o===q.answer, 'small', ()=>say(q.w.s.map(s=>({t:low(s),r:.55}))))); break;
   case 'missing': {
     speakAfter('Eksik harfi bul!', [{t:q.w.w, r:.6}]);
-    const w=q.w.w, wd=el('div','word', w.slice(0,q.idx)+'<span class="gap">?</span>'+w.slice(q.idx+1));
-    st.append(el('div','pic',q.w.e), wd, choices(q.options, o=>cased(o,q.big), o=>o===q.answer, '', ()=>{ wd.textContent=w; })); break;
+    const w=q.w.w, wd=wordEl(w.slice(0,q.idx)+'<span class="gap">?</span>'+w.slice(q.idx+1), w);
+    st.append(el('div','pic',q.w.e), wd, choices(q.options, o=>letHTML(cased(o,q.big)), o=>o===q.answer, '', ()=>{ wd.innerHTML=sylHTML(w); })); break;
   }
   case 'sentPic': {
     $('#bubble').textContent='Cümleyi oku. Hangi resim?'; say('Cümleyi oku. Hangi resim?');
     const sen=el('div','sentence');
-    q.s.t.split(' ').forEach(w=>{ const b=el('button','',w); b.onclick=()=>{ say({t:w.replace(/[.,!]/g,''),r:.6}); b.classList.add('lit'); }; sen.append(b); });
+    q.s.t.split(' ').forEach(w=>{ const b=el('button','',sylHTML(w)); b.onclick=()=>{ say({t:w.replace(/[.,!]/g,''),r:.6}); b.classList.add('lit'); }; sen.append(b); });
     replay=()=>say({t:q.s.t, r:.6});
     st.append(sen, choices(q.options, o=>o, o=>o===q.answer, 'emo', ()=>say({t:q.s.t,r:.7}))); break;
   }
   case 'sentOrder': {
-    speakAfter('Cümleyi dinle, kelimeleri sırala!', [{t:q.s.t, r:.6}]);
-    const slots=el('div','slots sent'); q.words.forEach(()=>slots.append(el('div','slot','')));
-    let k=0; const pool=el('div','choices');
-    q.pool.forEach(p=>{ const b=el('button','choice small tile',p); b.onclick=()=>{ if(busy) return;
-      if(p===q.words[k]){ slots.children[k].textContent=p; slots.children[k].classList.add('fill'); b.classList.add('used'); tone([660]); say({t:p.replace(/[.,!]/g,''),r:.6}); k++;
-        if(k===q.words.length){ setTimeout(()=>say({t:q.s.t,r:.7}),400); praise(); } }
-      else oops(b,true); }; pool.append(b); });
-    st.append(el('div','pic',q.s.e), slots, pool); break;
+    speakAfter('Cümleyi dinle, kelimeleri sırayla sürükle!', [{t:q.s.t, r:.6}]);
+    const [slots,row]=slotTask(q.words, q.pool, {cls:'small', sent:true, fmt:sylHTML, onPlace:p=>say({t:p.replace(/[.,!]/g,''),r:.6}),
+      onDone:()=>{ setTimeout(()=>say({t:q.s.t,r:.7}),400); praise(); }});
+    st.append(el('div','pic',q.s.e), slots, row); break;
+  }
+  case 'trace': renderTrace(q, st); break;
+  case 'mirror':
+    speakAfter(`Hangisi doğru yönde? Doğru ${q.letter} harfini bul!`, [{t:SND[q.letter], r:.6}]);
+    $('#bubble').innerHTML=`Hangisi doğru yönde? Doğru <b class="tgt">${q.letter}</b> harfini bul!`;
+    st.append(el('div','pic','🪞'), choices(q.options, t=>`<span class="flip" style="transform:${t}">${letHTML(q.letter)}</span>`, t=>t==='none')); break;
+  case 'reversal':
+    speakAfter('Dinle. Hangisi doğru yazılmış?', [{t:q.answer, r:.55}]);
+    st.append(el('div','pic','👂'), choices(q.options, o=>letHTML(o), o=>o===q.answer, '', ()=>say({t:q.answer,r:.6}))); break;
+  case 'blendSounds': case 'countSounds': {
+    const w=q.w.w, cars=el('div','train');
+    [...w].forEach(c=>cars.append(el('span','car'+(q.type==='countSounds'?' hid':''), q.type==='blendSounds'?letHTML(c):'')));
+    const play=()=>{ cars.querySelectorAll('.car').forEach(x=>{ x.classList.remove('lit'); if(q.type==='countSounds') x.classList.add('hid'); });
+      say([...w].map(c=>({t:SND[c], r:.5})));
+      [...w].forEach((c,k)=>setTimeout(()=>{ const x=cars.children[k]; if(x){ x.classList.remove('hid'); x.classList.add('lit'); tone([440+k*90],.08); } }, 300+k*900)); };
+    const btn=el('button','go alt small','🚂 Sesleri dinle'); btn.onclick=play; replay=play;
+    if (q.type==='blendSounds'){
+      $('#bubble').textContent='Sesleri dinle ve birleştir. Hangi resim?'; say('Sesleri dinle ve birleştir. Hangi resim?'); setTimeout(()=>{ if(round[qi]===q) play(); }, 2600);
+      st.append(cars, btn, choices(q.options, o=>o, o=>o===q.answer, 'emo', ()=>say({t:w,r:.7})));
+    } else {
+      $('#bubble').textContent='Kelimede kaç ses var? Vagonları say!'; say(['Kelimede kaç ses var?', {t:w,r:.6}]);
+      const wd=wordEl('', w);
+      st.append(el('div','pic',q.w.e), cars, btn, choices([2,3,4,5], o=>String(o), o=>o===q.answer, '', ()=>{ wd.innerHTML=letHTML(w); cars.querySelectorAll('.car').forEach((x,k)=>{ x.classList.remove('hid'); x.innerHTML=letHTML(w[k]); }); }), wd);
+    }
+    break;
+  }
+  case 'lastSound': {
+    speakAfter('Kelimenin son sesi hangisi?', [{t:q.w.w, r:.55}]);
+    const w=q.w.w, wd=wordEl(w.slice(0,-1)+'<span class="gap">?</span>', w);
+    st.append(el('div','pic',q.w.e), wd, choices(q.options, o=>letHTML(o), o=>o===q.answer, '', ()=>{ wd.innerHTML=sylHTML(w); })); break;
+  }
+  case 'paint': renderPaint(q, st); break;
+  case 'match': renderMatch(q, st); break;
+  case 'balloon': {
+    const many = q.target.length>1 ? 'hecesi' : 'harfi';
+    speakAfter(`Üstünde ${q.target} yazan balonları patlat!`, [{t:q.target, r:.6}]);
+    $('#bubble').innerHTML=`Üstünde <b class="tgt">${q.target}</b> yazan balonları patlat!`;
+    const cnt=el('div','counter'); for(let k=0;k<q.need;k++) cnt.append(el('span'));
+    let got=0, since=0;
+    const f=sky(()=>{ const hit = since>=2 || Math.random()<.4; since = hit?0:since+1; return hit ? q.target : rnd(q.pool.filter(x=>x!==q.target)); },
+      (txt,b)=>{ if (txt===q.target){ popBalloon(b); cnt.children[got].classList.add('on'); got++; say({t:q.target,r:.7}); if (got===q.need) praise(); }
+                 else { b.querySelector('.bb').animate([{transform:'rotate(-12deg)'},{transform:'rotate(12deg)'},{transform:'none'}],{duration:350}); oops(null); } });
+    st.append(cnt, f); void many; break;
+  }
+  case 'balloonW': {
+    const sy=q.w.s;
+    speakAfter('Heceleri sırayla patlat, kelimeyi kur!', [{t:q.w.w, r:.6}]);
+    const slots=el('div','slots'); sy.forEach(()=>slots.append(el('div','slot','')));
+    let k=0;
+    const others=SYLS.filter(s=>!sy.includes(s));
+    const f=sky(()=>Math.random()<.5 ? sy[k] || sy[0] : rnd(Math.random()<.5 ? sy : others),
+      (txt,b)=>{ if (txt===sy[k]){ popBalloon(b); slots.children[k].textContent=txt; slots.children[k].classList.add('fill'); if (save.a11y.syl) slots.children[k].classList.add('sy'+(k%2)); k++;
+                   if (k===sy.length){ busy=true; cleanup(); say([...sy.map(s=>({t:s,r:.55})),{t:q.w.w,r:.7}]); setTimeout(()=>{ busy=false; praise(); },400); } else say({t:txt,r:.6}); }
+                 else { b.querySelector('.bb').animate([{transform:'rotate(-12deg)'},{transform:'rotate(12deg)'},{transform:'none'}],{duration:350}); oops(null); } });
+    st.append(el('div','pic small',q.w.e), slots, f); break;
   }
   }
 }
 
+/* ---------- harf izleme ---------- */
+function renderTrace(q, st){
+  const ch = q.big ? up(q.letter) : q.letter;
+  speakAfter2(`Parmağınla ${ch} harfinin üstünden geç, çizerken sesini söyle!`, [{t:SND[q.letter], r:.6}]);
+  const size=Math.min(320, Math.max(220, st.clientWidth-8)), dpr=Math.min(2, window.devicePixelRatio||1), W=Math.round(size*dpr);
+  const box=el('div','tracebox'); box.style.width=size+'px'; box.style.height=size+'px';
+  const bg=el('canvas'), ink=el('canvas'); [bg,ink].forEach(c=>{ c.width=W; c.height=W; box.append(c); });
+  const clear=el('button','go alt small','Sil');
+  st.append(box, clear);
+  const bx=bg.getContext('2d'), ix=ink.getContext('2d'); let mask=[], ready=false, done=false;
+  const font=`700 ${Math.round(W*.78)}px Andika, "Comic Sans MS", sans-serif`;
+  const drawGuide=()=>{
+    bx.clearRect(0,0,W,W); bx.font=font; bx.textAlign='center'; bx.textBaseline='alphabetic';
+    const m=bx.measureText(ch), y=W/2+((m.actualBoundingBoxAscent||W*.5)-(m.actualBoundingBoxDescent||0))/2;
+    bx.fillStyle='#000'; bx.fillText(ch, W/2, y);
+    const data=bx.getImageData(0,0,W,W).data, step=Math.max(3,Math.round(W/80)); mask=[];
+    for (let yy=0;yy<W;yy+=step) for (let xx=0;xx<W;xx+=step) if (data[(yy*W+xx)*4+3]>128) mask.push(yy*W+xx);
+    bx.clearRect(0,0,W,W); bx.fillStyle='#ecdcb0'; bx.fillText(ch, W/2, y);
+    // başlangıç noktası ipucu
+    bx.setLineDash([W*.02,W*.03]); bx.strokeStyle='#d8c08a'; bx.lineWidth=W*.012; bx.strokeText(ch, W/2, y); bx.setLineDash([]);
+    ready=true;
+  };
+  (document.fonts && document.fonts.load ? document.fonts.load(font) : Promise.resolve()).then(drawGuide, drawGuide);
+  ix.lineCap='round'; ix.lineJoin='round'; ix.lineWidth=W*.1; ix.strokeStyle='#ff7957';
+  let last=null;
+  const pos=e=>{ const r=ink.getBoundingClientRect(); return [(e.clientX-r.left)*W/r.width, (e.clientY-r.top)*W/r.height]; };
+  let lastSay=0;
+  ink.addEventListener('pointerdown', e=>{ if(busy||done) return; if (Date.now()-lastSay>1200){ lastSay=Date.now(); say({t:SND[q.letter],r:.6}); } try{ink.setPointerCapture(e.pointerId);}catch(_){} last=pos(e); ix.beginPath(); ix.arc(last[0],last[1],ix.lineWidth/2,0,7); ix.fillStyle='#ff7957'; ix.fill(); });
+  ink.addEventListener('pointermove', e=>{ if(!last) return; const p=pos(e); ix.beginPath(); ix.moveTo(last[0],last[1]); ix.lineTo(p[0],p[1]); ix.stroke(); last=p; });
+  const check=()=>{ last=null; if(!ready||done||busy) return;
+    const d=ix.getImageData(0,0,W,W).data; let hit=0; mask.forEach(i=>{ if(d[i*4+3]>0) hit++; });
+    const cover=hit/Math.max(1,mask.length);
+    // dışarı taşma: her şeyi karalamak sayılmasın
+    let inkN=0, step=Math.max(4,Math.round(W/60)); for (let y=0;y<W;y+=step) for (let x=0;x<W;x+=step) if (d[(y*W+x)*4+3]>0) inkN++;
+    const area=(W/step)*(W/step);
+    if (cover>=.55 && inkN/area<.5){ done=true; box.classList.add('ok'); say({t:SND[q.letter],r:.6}); praise(); }
+    else if (inkN/area>=.5){ say(`Sadece harfin üstünü boya ${CHILD}.`); ix.clearRect(0,0,W,W); }
+  };
+  ink.addEventListener('pointerup', check); ink.addEventListener('pointercancel', ()=>{ last=null; });
+  clear.onclick=()=>{ if(!done) ix.clearRect(0,0,W,W); };
+}
+function speakAfter2(prompt, parts){ replay=()=>say(parts); $('#bubble').textContent=prompt; say([prompt, ...parts]); }
+
+/* ---------- gizli resim boyama ---------- */
+function renderPaint(q, st){
+  const T=q.target;
+  speakAfter2(`İçinde ${T} harfi olan kutuları boya! Gizli resim çıkacak.`, [{t:SND[T], r:.6}]);
+  $('#bubble').innerHTML=`İçinde <b class="tgt">${T}</b> olan kutuları boya! Gizli resim çıkacak.`;
+  const cols=['#ff7957','#76c96a','#b07cff','#2fb4c4'], pal=el('div','palette'); let color=cols[0];
+  cols.forEach((c,k)=>{ const s=el('button','swatch'+(k?'':' on')); s.style.background=c; s.setAttribute('aria-label','Renk '+(k+1));
+    s.onclick=()=>{ color=c; pal.querySelectorAll('.swatch').forEach(x=>x.classList.toggle('on',x===s)); tone([520+k*60]); }; pal.append(s); });
+  const grid=el('div','paintgrid'); const left=()=>grid.querySelectorAll('.cell.t:not(.painted)').length;
+  q.cells.forEach(c=>{ const b=el('button','cell'+(c===T?' t':''), c);
+    b.onclick=()=>{ if(busy||b.classList.contains('painted')) return;
+      if (c===T){ b.style.setProperty('--pc',color); b.classList.add('painted'); tone([660+Math.random()*200]);
+        if (!left()){ busy=true; const r=el('div','reveal',PICS[q.pi].e); st.append(r); r.scrollIntoView({block:'nearest'}); say(`Gizli resmi buldun ${CHILD}!`); setTimeout(()=>{ busy=false; praise(); },900); } }
+      else oops(b,true); };
+    grid.append(b); });
+  st.append(pal, grid);
+}
+
+/* ---------- resim–kelime eşleştirme ---------- */
+function renderMatch(q, st){
+  speakAfter2('Kelimeleri oku, doğru resmin altına sürükle!', []);
+  replay=()=>say('Kelimeleri oku, doğru resmin altına sürükle!');
+  const targets=el('div','targets'), cards=el('div','choices'); let sel=null, left=q.items.length;
+  q.items.forEach(w=>{ const t=el('div','target',`<span>${w.e}</span><span class="drop"></span>`); t.dataset.w=w.w;
+    t.onclick=()=>{ if(sel) tryMatch(sel, t); }; targets.append(t); });
+  const tryMatch=(b,t)=>{ if(busy||t.classList.contains('done')) return;
+    if (t.dataset.w===b.dataset.w){ t.classList.add('done'); t.querySelector('.drop').innerHTML=sylHTML(b.dataset.w); b.classList.add('used'); b.classList.remove('sel'); sel=null; tone([660,880]); say({t:b.dataset.w,r:.7});
+      if (!--left) praise(); }
+    else { b.classList.remove('sel'); sel=null; oops(b,true); } };
+  shuffle(q.items).forEach(w=>{ const b=el('button','choice small tile',sylHTML(w.w)); b.dataset.w=w.w;
+    b.onclick=()=>{ if(b.dataset.dragged||busy||b.classList.contains('used')) return; cards.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel')); sel=b; b.classList.add('sel'); say({t:w.w,r:.7}); };
+    draggable(b, under=>{ const t=under && under.closest('.target'); if(t) tryMatch(b,t); });
+    cards.append(b); });
+  st.append(targets, cards);
+}
+
 function finish(){
-  const i=G_level, stars = mistakes<=1?3:mistakes<=4?2:1;
-  const first = !save.plays[i];
-  save.plays[i]=(save.plays[i]||0)+1;
-  save.stars[i]=Math.max(save.stars[i]||0, stars);
+  cleanup();
+  const i=G_level, id=ISLANDS[i].id, stars = mistakes<=1?3:mistakes<=4?2:1;
+  const first = !save.plays[id];
+  delete save.cur;
+  save.plays[id]=(save.plays[id]||0)+1;
+  save.stars[id]=Math.max(save.stars[id]||0, stars);
   let sticker=null;
   if (!save.stickers.includes(ISLANDS[i].sticker)) sticker=ISLANDS[i].sticker;
   else { const left=EXTRA.filter(s=>!save.stickers.includes(s)); if(left.length) sticker=rnd(left); }
   if (sticker) save.stickers.push(sticker);
   persist(); renderHeader();
-  const msg = stars===3?'Süper! Hepsini buldun!':stars===2?'Çok iyi gidiyorsun!':'Bitirdin! Tekrar oynarsan daha çok yıldız alırsın.';
+  const msg = stars===3?`Süpersin ${CHILD}! Hepsini buldun!`:stars===2?`Çok iyi gidiyorsun ${CHILD}!`:`Bitirdin ${CHILD}! Tekrar oynarsan daha çok yıldız alırsın.`;
   const nextOpen = i<ISLANDS.length-1 && first;
   $('#overlay').innerHTML = `<div class="over"><div class="card-big">
     <h2>${ISLANDS[i].name} bitti!</h2>
     <div class="bigstars">${[0,1,2].map(k=>`<span class="${k<stars?'':'off'}" style="animation-delay:${k*.25}s">★</span>`).join('')}</div>
+    <p><b>${msg}</b></p>
     ${sticker?`<div class="newsticker">${sticker}</div><p>Yeni sticker albümüne eklendi!</p>`:`<p>Albümün tamamen doldu. Harikasın!</p>`}
     ${nextOpen?`<p>Yeni ada açıldı: <b>${ISLANDS[i+1].name}</b> ${ISLANDS[i+1].icon}</p>`:''}
     <div class="btnrow"><button class="go" id="toMap">Haritaya dön</button><button class="go alt" id="again">Tekrar oyna</button></div>
@@ -432,22 +759,54 @@ function finish(){
   tone([523,659,784,1046,1318],.13); burst(); burst();
   say([msg, ...(sticker?['Yeni bir sticker kazandın!']:[])], .9);
   $('#toMap').onclick=()=>{ $('#overlay').innerHTML=''; show('mapScreen'); renderMap(); };
-  $('#again').onclick=()=>{ $('#overlay').innerHTML=''; startLevel(i); };
+  $('#again').onclick=()=>{ $('#overlay').innerHTML=''; startLevel(i, true); };
 }
 
 /* ---------- albüm ---------- */
 function openAlbum(){
   const have=save.stickers;
   $('#overlay').innerHTML = `<div class="over"><div class="card-big">
-    <h2>Sticker Albümüm</h2><p>${have.length} / ${ALL_STICKERS.length} sticker topladın. Her bitirdiğin ada yeni bir tane verir!</p>
+    <h2>${CHILD}'nın Albümü</h2><p>${have.length} / ${ALL_STICKERS.length} sticker topladın. Her bitirdiğin ada yeni bir tane verir!</p>
     <div class="album">${ALL_STICKERS.map(s=>have.includes(s)?`<div>${s}</div>`:'<div class="empty">?</div>').join('')}</div>
     <div class="btnrow" style="margin-top:18px"><button class="go" id="closeAlbum">Kapat</button></div>
+    <div class="backup"><b>Anne-baba için yedek kodu</b><span>İlerleme bu cihazda kendiliğinden kaydedilir. Tarayıcı temizlenirse ya da başka cihaza geçerseniz bu kodla geri yükleyin.</span>
+      <textarea id="codeOut" readonly rows="2"></textarea><button class="go" id="copyCode">Kodu kopyala</button>
+      <input id="codeIn" placeholder="Yedek kodunu buraya yapıştır" autocomplete="off"><button class="go alt" id="loadCode">Kodu yükle</button><div id="codeMsg" role="status"></div></div>
     <button class="reset" id="resetBtn">Baştan başla</button><div id="confirmBox"></div>
   </div></div>`;
   $('#closeAlbum').onclick=()=>{ $('#overlay').innerHTML=''; };
+  $('#codeOut').value=makeCode();
+  $('#copyCode').onclick=()=>{ const t=$('#codeOut'); const done=()=>$('#codeMsg').textContent='Kopyalandı. Bir yere not edin.';
+    try { navigator.clipboard.writeText(t.value).then(done,()=>{ t.select(); $('#codeMsg').textContent='Kod seçildi, kopyalayın.'; }); } catch(e){ t.select(); } };
+  $('#loadCode').onclick=()=>{ const d=readCode($('#codeIn').value);
+    if(!d){ $('#codeMsg').textContent='Bu kod okunamadı. TAN- ile başlayan kodun tamamını yapıştırın.'; return; }
+    // Kayıp olmasın: mevcut ilerlemeyle birleştir, her adada en iyi yıldız kalsın.
+    Object.entries(d.stars).forEach(([k,v])=>save.stars[k]=Math.max(save.stars[k]||0,v));
+    Object.entries(d.plays).forEach(([k,v])=>save.plays[k]=Math.max(save.plays[k]||0,v));
+    d.stickers.forEach(x=>{ if(!save.stickers.includes(x)) save.stickers.push(x); });
+    persist(); renderMap(); openAlbum(); $('#codeMsg').textContent='İlerleme geri yüklendi!'; };
   $('#resetBtn').onclick=()=>{ $('#confirmBox').innerHTML='<div class="confirm">Tüm yıldızlar ve stickerlar silinsin mi? <button class="go alt" id="yes">Evet</button><button class="go" id="no">Hayır</button></div>';
-    $('#yes').onclick=()=>{ save={stars:{},plays:{},stickers:[],sound:save.sound}; persist(); $('#overlay').innerHTML=''; show('mapScreen'); renderMap(); };
+    $('#yes').onclick=()=>{ save={v:2,stars:{},plays:{},stickers:[],sound:save.sound,a11y:save.a11y}; persist(); $('#overlay').innerHTML=''; show('mapScreen'); renderMap(); };
     $('#no').onclick=()=>{ $('#confirmBox').innerHTML=''; }; };
+}
+
+/* ---------- okuma ayarları ---------- */
+function openSettings(){
+  const rows=[
+    ['syl','Heceleri renklendir','Kelimelerin heceleri mavi ve kırmızı sırayla boyanır.',[[true,'Açık'],[false,'Kapalı']]],
+    ['vow','Sesli harfleri kırmızı yap','a, e, i, o kırmızı görünür; sessiz harfler koyu kalır.',[[true,'Açık'],[false,'Kapalı']]],
+    ['wide','Harf ve kelime aralığı','Geniş aralık harflerin birbirine karışmasını azaltır.',[[true,'Geniş'],[false,'Normal']]],
+    ['font','Yazı tipi','İkisi de okumayı kolaylaştırmak için tasarlandı.',[['andika','Andika'],['lexend','Lexend']]],
+    ['slow','Konuşma hızı','Yavaş konuşma sesleri ayırt etmeye yardım eder.',[[true,'Yavaş'],[false,'Normal']]],
+    ['hint','Harf ipucu resimleri','"Hangi harf?" sorularında harfin altında resmi görünür.',[[true,'Açık'],[false,'Kapalı']]]
+  ];
+  $('#overlay').innerHTML=`<div class="over"><div class="card-big"><h2>Okuma ayarları</h2>
+    <p>Disleksi için önerilen ayarlar baştan açık. İstediğinizi kapatabilirsiniz.</p>
+    <div id="setRows">${rows.map(([k,t,d,opts])=>`<div class="setrow"><div><b>${t}</b><small>${d}</small></div><div class="seg">${opts.map(([v,l],i)=>`<button data-k="${k}" data-i="${i}" class="${save.a11y[k]===v?'on':''}">${l}</button>`).join('')}</div></div>`).join('')}</div>
+    <div class="btnrow" style="margin-top:18px"><button class="go" id="closeSet">Tamam</button></div></div></div>`;
+  $('#setRows').onclick=e=>{ const b=e.target.closest('button[data-k]'); if(!b) return; const row=rows.find(r=>r[0]===b.dataset.k);
+    save.a11y[row[0]]=row[3][+b.dataset.i][0]; persist(); applyA11y(); b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); tone([660]); };
+  $('#closeSet').onclick=()=>{ $('#overlay').innerHTML=''; if(!$('#playScreen').hidden) nextQ(); };
 }
 
 /* ---------- efekt ---------- */
@@ -460,9 +819,15 @@ function burst(){
 }
 
 /* ---------- bağla ---------- */
-$('#backBtn').onclick=()=>{ try{speechSynthesis.cancel();}catch(e){} show('mapScreen'); renderMap(); };
+$('#backBtn').onclick=()=>{ cleanup(); try{speechSynthesis.cancel();}catch(e){} show('mapScreen'); renderMap(); };
 $('#listenBtn').onclick=()=>replay();
 $('#albumBtn').onclick=openAlbum;
+$('#setBtn').onclick=openSettings;
+// Ekrandaki kelimeye dokununca hecelerine ayırarak okur.
+$('#stage').addEventListener('click', e=>{ const d=e.target.closest('[data-say]'); if (d && !busy) say([...syllables(d.dataset.say).map(x=>({t:low(x),r:.55})), {t:d.dataset.say,r:.7}]); });
+applyA11y();
 $('#soundBtn').onclick=()=>{ save.sound=!save.sound; persist(); renderHeader(); if(!save.sound) try{speechSynthesis.cancel();}catch(e){} else say('Ses açık!'); };
 renderMap();
 </script>
+</body>
+</html>
