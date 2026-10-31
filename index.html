@@ -198,7 +198,7 @@ body.lexend{--read:"Lexend","Andika","Segoe UI",system-ui,sans-serif}
 <body>
 <div class="app">
   <header class="top">
-    <div class="brand"><span class="fox" aria-hidden="true">🦊</span><h1>Sezen Lina'nın Harf Macerası<small>A N E T İ L O · Tan ile ses ve hece avı</small></h1></div>
+    <div class="brand"><span class="fox" aria-hidden="true">🦊</span><h1>Sezen Lina'nın Harf Macerası<small>A N E T İ L O K · Tan ile ses ve hece avı</small></h1></div>
     <button class="pill btn" id="soundBtn" aria-label="Sesi aç/kapat">🔊</button>
     <button class="pill btn" id="setBtn" aria-label="Okuma ayarları">⚙️</button>
     <button class="pill btn" id="albumBtn" aria-label="Sticker albümü">📒 <span id="stkCount">0</span></button>
@@ -231,12 +231,12 @@ body.lexend{--read:"Lexend","Andika","Segoe UI",system-ui,sans-serif}
 <script>
 /* ---------- veri ---------- */
 const CHILD = 'Sezen Lina';
-const L = ['a','n','e','t','i','l','o'];
-const CONS = ['n','t','l'], VOW = ['a','e','i','o'];
+const L = ['a','n','e','t','i','l','o','k'];
+const CONS = ['n','t','l','k'], VOW = ['a','e','i','o'];
 // Ünsüzleri tek başına söyletiyoruz; motor harfi kendi bildiği gibi okur.
-const SND = {a:'a', n:'n', e:'e', t:'t', i:'i', l:'l', o:'o'};
-const LW = {a:['at','🐴'], n:['nota','🎵'], e:['el','✋'], t:['ton','🐟'], i:['ilan','📢'], l:['lale','🌷'], o:['olta','🎣']};
-const SYLS = ['na','ne','ni','no','ta','te','ti','to','la','le','li','lo','an','en','in','on','at','et','ot','al','el','il','ol'];
+const SND = {a:'a', n:'n', e:'e', t:'t', i:'i', l:'l', o:'o', k:'k'};
+const LW = {a:['at','🐴'], n:['nota','🎵'], e:['el','✋'], t:['ton','🐟'], i:['ilan','📢'], l:['lale','🌷'], o:['olta','🎣'], k:['kek','🧁']};
+const SYLS = ['na','ne','ni','no','ta','te','ti','to','la','le','li','lo','an','en','in','on','at','et','ot','al','el','il','ol','ka','ke','ki','ko','ak','ek','ik','ok'];
 const WORDS = [
   {w:'at',s:['at'],e:'🐴'},{w:'et',s:['et'],e:'🥩'},{w:'el',s:['el'],e:'✋'},{w:'tel',s:['tel'],e:'🧵'},
   {w:'ot',s:['ot'],e:'🌱'},{w:'on',s:['on'],e:'🔟'},{w:'ton',s:['ton'],e:'🐟'},
@@ -244,6 +244,9 @@ const WORDS = [
   {w:'lale',s:['la','le'],e:'🌷'},{w:'lila',s:['li','la'],e:'💜'},{w:'alet',s:['a','let'],e:'🔧'},{w:'ilan',s:['i','lan'],e:'📢'},
   {w:'atla',s:['at','la'],e:'🦘'},{w:'tatil',s:['ta','til'],e:'🏖️'},{w:'anten',s:['an','ten'],e:'📡'},{w:'telli',s:['tel','li'],e:'🎸'},
   {w:'olta',s:['ol','ta'],e:'🎣'},{w:'nota',s:['no','ta'],e:'🎵'},{w:'otel',s:['o','tel'],e:'🏨'},{w:'alo',s:['a','lo'],e:'☎️'},{w:'oto',s:['o','to'],e:'🚗'},
+  {w:'ok',s:['ok'],e:'🏹'},{w:'kol',s:['kol'],e:'💪'},{w:'kot',s:['kot'],e:'👖'},{w:'kek',s:['kek'],e:'🧁'},
+  {w:'kale',s:['ka','le'],e:'🏰'},{w:'kola',s:['ko','la'],e:'🥤'},{w:'inek',s:['i','nek'],e:'🐄'},{w:'tekne',s:['tek','ne'],e:'⛵'},
+  {w:'kilit',s:['ki','lit'],e:'🔒'},{w:'kilo',s:['ki','lo'],e:'⚖️'},{w:'ekin',s:['e','kin'],e:'🌾'},{w:'kalkan',s:['kal','kan'],e:'🛡️'},
   {w:'Ali',s:['A','li'],e:'👦'},{w:'Ela',s:['E','la'],e:'👧'},
   {w:'naneli',s:['na','ne','li'],e:'🍵'},{w:'laleli',s:['la','le','li'],e:'💐'},
   {w:'anneanne',s:['an','ne','an','ne'],e:'👵'}
@@ -251,7 +254,8 @@ const WORDS = [
 const SENT = [
   {t:'Ali ata ot at.',e:'🐴'},{t:'Ela, olta al.',e:'🎣'},{t:'Nine nane al.',e:'🌿'},{t:'Anne, tel al.',e:'🧵'},
   {t:'Ali ile Ela.',e:'👫'},{t:'Anne, alo!',e:'☎️'},{t:'Ela, tatil!',e:'🏖️'},{t:'Ali, nota al.',e:'🎵'},
-  {t:'On tane ot al.',e:'🌱'},{t:'Ela lale al.',e:'🌷'}
+  {t:'On tane ot al.',e:'🌱'},{t:'Ela lale al.',e:'🌷'},
+  {t:'Ela kek al.',e:'🧁'},{t:'Ali ok at.',e:'🏹'},{t:'Anne, kola al!',e:'🥤'},{t:'Nine kilit al.',e:'🔒'}
 ];
 // Gizli resimler: # olan kutularda hedef harf var.
 const PICS = [
@@ -262,7 +266,7 @@ const PICS = [
 ];
 // Sıra: sakin bir ada ile hareketli bir ada dönüşümlü gelir.
 const ISLANDS = [
-  {id:'ses',    name:'Ses Adası',          icon:'🌴', sticker:'🦜', plan:['meet','pickLetter:o','startLetter','pickLetter','startLetter:o','pickLetter','startLetter']},
+  {id:'ses',    name:'Ses Adası',          icon:'🌴', sticker:'🦜', plan:['meet','pickLetter:k','startLetter:o','pickLetter','startLetter:k','pickLetter:o','startLetter']},
   {id:'iz',     name:'Harf İzleme Tepesi', icon:'✏️', sticker:'🦒', plan:L.map(a=>'trace:'+a)},
   {id:'ayna',   name:'Ayna Gölü',          icon:'🪞', sticker:'🦓', plan:['mirror','reversal','mirror','reversal','mirror','reversal']},
   {id:'hece',   name:'Hece Köprüsü',       icon:'🌉', sticker:'🐢', plan:['blend','buildSyl','blend','buildSyl','blend','buildSyl']},
@@ -397,7 +401,7 @@ const G = {
   balloonS(){ const s=rnd(SYLS); const near=SYLS.filter(x=>x!==s && (x[0]===s[0] || x[1]===s[1] || x===s[1]+s[0]));
     return {type:'balloon', key:'h'+s, target:s, pool:[s,...near.slice(0,5)], need:5}; },
   // Ayna harfler: disleksili çocuklar harfin yönünü karıştırabilir. n'nin yalnız ters hâli (u gibi) belirgin farklıdır.
-  mirror(){ const T={a:['scaleX(-1)','scaleY(-1)','rotate(180deg)'], e:['scaleX(-1)','scaleY(-1)','rotate(180deg)'], t:['scaleX(-1)','scaleY(-1)','rotate(180deg)'], n:['rotate(180deg)']};
+  mirror(){ const T={a:['scaleX(-1)','scaleY(-1)','rotate(180deg)'], e:['scaleX(-1)','scaleY(-1)','rotate(180deg)'], t:['scaleX(-1)','scaleY(-1)','rotate(180deg)'], k:['scaleX(-1)','rotate(180deg)'], n:['rotate(180deg)']};
     const a=rnd(Object.keys(T)); return {type:'mirror', key:'r'+a, letter:a, options:shuffle(['none',...T[a]])}; },
   // Ters okunan heceler: on/no, at/ta...
   reversal(){ const P=[['at','ta'],['el','le'],['an','na'],['ot','to'],['on','no'],['al','la'],['et','te'],['il','li'],['ol','lo'],['in','ni'],['tel','let'],['ton','not'],['net','ten']];

@@ -202,7 +202,7 @@ body.lexend{--read:"Lexend","Andika","Segoe UI",system-ui,sans-serif}
 <body>
 <div class="app">
   <header class="top">
-    <div class="brand"><span class="fox" aria-hidden="true">🦊</span><h1>Sezen Lina'nın Dino Vadisi<small>A N E T İ L O · yeni harf ve hece oyunları</small></h1></div>
+    <div class="brand"><span class="fox" aria-hidden="true">🦊</span><h1>Sezen Lina'nın Dino Vadisi<small>A N E T İ L O K · yeni harf ve hece oyunları</small></h1></div>
     <button class="pill btn" id="soundBtn" aria-label="Sesi aç/kapat">🔊</button>
     <button class="pill btn" id="setBtn" aria-label="Okuma ayarları">⚙️</button>
     <button class="pill btn" id="albumBtn" aria-label="Dino yuvası">🦕 <span id="stkCount">0</span></button>
@@ -235,24 +235,29 @@ body.lexend{--read:"Lexend","Andika","Segoe UI",system-ui,sans-serif}
 <script>
 /* ---------- veri ---------- */
 const CHILD = 'Sezen Lina';
-const L = ['a','n','e','t','i','l','o'];
-const CONS = ['n','t','l'], VOW = ['a','e','i','o'];
-const SND = {a:'a', n:'n', e:'e', t:'t', i:'i', l:'l', o:'o'};
-const LW = {a:['at','🐴'], n:['nota','🎵'], e:['el','✋'], t:['ton','🐟'], i:['ilan','📢'], l:['lale','🌷'], o:['olta','🎣']};
-const SYLS = ['na','ne','ni','no','ta','te','ti','to','la','le','li','lo','an','en','in','on','at','et','ot','al','el','il','ol'];
+const L = ['a','n','e','t','i','l','o','k'];
+const CONS = ['n','t','l','k'], VOW = ['a','e','i','o'];
+const SND = {a:'a', n:'n', e:'e', t:'t', i:'i', l:'l', o:'o', k:'k'};
+const LW = {a:['at','🐴'], n:['nota','🎵'], e:['el','✋'], t:['ton','🐟'], i:['ilan','📢'], l:['lale','🌷'], o:['olta','🎣'], k:['kek','🧁']};
+const SYLS = ['na','ne','ni','no','ta','te','ti','to','la','le','li','lo','an','en','in','on','at','et','ot','al','el','il','ol','ka','ke','ki','ko','ak','ek','ik','ok'];
 const WORDS = [
   {w:'at',s:['at'],e:'🐴'},{w:'et',s:['et'],e:'🥩'},{w:'el',s:['el'],e:'✋'},{w:'tel',s:['tel'],e:'🧵'},
   {w:'ot',s:['ot'],e:'🌱'},{w:'on',s:['on'],e:'🔟'},{w:'ton',s:['ton'],e:'🐟'},
   {w:'ana',s:['a','na'],e:'👩'},{w:'anne',s:['an','ne'],e:'👩‍👧'},{w:'nine',s:['ni','ne'],e:'👵'},{w:'nane',s:['na','ne'],e:'🌿'},
   {w:'lale',s:['la','le'],e:'🌷'},{w:'lila',s:['li','la'],e:'💜'},{w:'alet',s:['a','let'],e:'🔧'},{w:'ilan',s:['i','lan'],e:'📢'},
   {w:'atla',s:['at','la'],e:'🦘'},{w:'tatil',s:['ta','til'],e:'🏖️'},{w:'anten',s:['an','ten'],e:'📡'},{w:'telli',s:['tel','li'],e:'🎸'},
-  {w:'olta',s:['ol','ta'],e:'🎣'},{w:'nota',s:['no','ta'],e:'🎵'},{w:'otel',s:['o','tel'],e:'🏨'},{w:'alo',s:['a','lo'],e:'☎️'},{w:'oto',s:['o','to'],e:'🚗'}
+  {w:'olta',s:['ol','ta'],e:'🎣'},{w:'nota',s:['no','ta'],e:'🎵'},{w:'otel',s:['o','tel'],e:'🏨'},{w:'alo',s:['a','lo'],e:'☎️'},{w:'oto',s:['o','to'],e:'🚗'},
+  {w:'ok',s:['ok'],e:'🏹'},{w:'kol',s:['kol'],e:'💪'},{w:'kot',s:['kot'],e:'👖'},{w:'kek',s:['kek'],e:'🧁'},
+  {w:'kale',s:['ka','le'],e:'🏰'},{w:'kola',s:['ko','la'],e:'🥤'},{w:'inek',s:['i','nek'],e:'🐄'},{w:'tekne',s:['tek','ne'],e:'⛵'},
+  {w:'kilit',s:['ki','lit'],e:'🔒'},{w:'kilo',s:['ki','lo'],e:'⚖️'},{w:'ekin',s:['e','kin'],e:'🌾'},{w:'kalkan',s:['kal','kan'],e:'🛡️'}
 ];
 const STORIES = [
   {t:['Ela ile Ali tatil.','Ela lale al.','Ali olta al.'], q:'Ali ne aldı?', a:'🎣', o:['🎣','🌷','🧵']},
   {t:['Nine, Ela ile Ali.','Nine nota al.','Ela tel al.'], q:'Nine ne aldı?', a:'🎵', o:['🎵','🧵','🌿']},
   {t:['Ali ata ot at.','At, ot tat.','Ali, atla! Atla!'], q:'Ali ata ne attı?', a:'🌱', o:['🌱','🥩','🌷']},
-  {t:['Anne, alo! Alo!','Anne nane al.','Anne on lale al.'], q:'Anne kaç lale aldı?', a:'🔟', o:['🔟','2️⃣','5️⃣']}
+  {t:['Anne, alo! Alo!','Anne nane al.','Anne on lale al.'], q:'Anne kaç lale aldı?', a:'🔟', o:['🔟','2️⃣','5️⃣']},
+  {t:['Anne kek al.','Ela kola al.','Ali, kek al! Kola al!'], q:'Ela ne aldı?', a:'🥤', o:['🥤','🧁','🌷']},
+  {t:['Ali ok al.','Ali ok at.','Ela, kale! Kale!'], q:'Ali ne attı?', a:'🏹', o:['🏹','⚽','🧁']}
 ];
 // Her yuva bir dinozor yumurtası; bitince yumurta çatlar.
 const NESTS = [
