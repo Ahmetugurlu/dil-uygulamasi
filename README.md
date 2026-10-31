@@ -3,7 +3,7 @@
 7 yaşındaki 1. sınıf öğrencisi için tek bir uygulamada dört oyunlaştırılmış öğrenme diyarı:
 
 - **Odak Kampı** (`apps/odak.html`): ölçümlü, uyarlanabilir dikkat süresi çalışması (öncelikli)
-- **Harf Macerası** (`apps/harf.html`): A N E T İ L O harfleriyle ses, hece, kelime ve cümle (MEB ses temelli okuma)
+- **Harf Macerası** (`apps/harf.html`): A N E T İ L O K harfleriyle ses, hece, kelime ve cümle (MEB ses temelli okuma)
 - **Sayı Gezegeni** (`apps/sayi.html`): 1. sınıf matematik
 - **Dikkat Ormanı** (`apps/dikkat.html`): sakin dikkat oyunları
 
