@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
+<title>Odak Kampı</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Baloo+2:wght@600;700;800&display=swap">
+<style>
+/* Layout: gece göğünde bir roket yolculuğu. Ana ekranda tek büyük "bugünün görevi" kartı; oyunda tek görev, ilerleme roketi, süre baskısı yok. Tek görünüm (gece), bilinçli olarak tema değişmez. */
+:root{
+  --sky:#27347a; --sky-deep:#161e4d; --card:#fffaf0; --ink:#24344f; --ink-soft:#5a6883; --line:#e5d6b4;
+  --sun:#ffc63a; --coral:#ff7957; --ok:#3fae5a; --mint:#7fd6b0; --violet:#8b7cf6; --soft-no:#f3b6a6; --lock:#a9b4c2;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --read:"Andika","Comic Sans MS","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{background:var(--sky-deep);color:var(--ink);font-family:var(--display);
+  background-image:radial-gradient(1.5px 1.5px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 78% 9%,#fff 50%,transparent 51%),
+  radial-gradient(2px 2px at 46% 32%,#fff9 50%,transparent 51%),radial-gradient(1.5px 1.5px at 88% 52%,#fff 50%,transparent 51%),
+  radial-gradient(2px 2px at 22% 70%,#fff9 50%,transparent 51%),radial-gradient(1.5px 1.5px at 64% 84%,#fff 50%,transparent 51%),
+  linear-gradient(180deg,var(--sky) 0%,var(--sky-deep) 100%);background-attachment:fixed;
+  -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+button{font-family:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible{outline:4px solid var(--sun);outline-offset:3px}
+.app{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 40px;min-height:100%;box-sizing:border-box}
+
+/* header */
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{flex:1 1 260px;min-width:0;display:flex;align-items:center;gap:10px}
+.brand .fox{font-size:44px;line-height:1}
+.brand h1{margin:0;font-size:clamp(24px,5.5vw,34px);line-height:1;color:#fff;font-weight:800;text-wrap:balance}
+.brand small{display:block;font-size:14px;color:#cfd8ff;font-weight:600;letter-spacing:.02em}
+.pill{display:flex;align-items:center;gap:6px;background:var(--card);border-radius:999px;padding:6px 14px;font-weight:800;font-size:20px;box-shadow:0 4px 0 rgba(0,0,0,.25);font-variant-numeric:tabular-nums}
+.pill.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.notice{margin-top:10px;background:rgba(255,255,255,.9);border-radius:14px;padding:8px 12px;font-size:15px;color:var(--ink-soft)}
+
+/* home */
+#home{display:flex;flex-direction:column;gap:16px;margin-top:16px}
+.panel{background:var(--card);border-radius:28px;padding:18px 16px 22px;box-shadow:0 8px 0 rgba(0,0,0,.25)}
+.today h2,.testcard h2{margin:0;font-size:26px;line-height:1.1}
+.today p,.testcard p{margin:6px 0 0;font-size:17px;color:var(--ink-soft);font-weight:600;line-height:1.3}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.chip{display:flex;align-items:center;gap:6px;background:#fff;border:3px solid var(--line);border-radius:999px;padding:4px 12px 4px 8px;font-weight:800;font-size:16px}
+.chip b{font-size:22px}
+.chip.rest{border-style:dashed;color:var(--ink-soft);font-weight:700}
+.go{background:var(--ok);color:#fff;font-weight:800;font-size:26px;padding:12px 32px;border-radius:999px;box-shadow:0 6px 0 #2b8442}
+.go:active{transform:translateY(4px);box-shadow:0 2px 0 #2b8442}
+.go:disabled{background:var(--lock);box-shadow:0 6px 0 #8a95a3;cursor:default}
+.go.alt{background:var(--coral);box-shadow:0 6px 0 #c9553a}
+.go.blue{background:var(--violet);box-shadow:0 6px 0 #6253c9}
+.go.small{font-size:19px;padding:8px 20px}
+.testcard{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.testcard .txt{flex:1 1 220px;min-width:0}
+.badge{display:inline-block;background:#fff3c4;border-radius:999px;padding:0 10px;font-weight:800;font-size:15px;color:#9a6b00;margin-top:6px}
+.sec{margin:6px 0 -6px;color:#fff;font-size:20px;font-weight:800;letter-spacing:.02em}
+.journey{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;background:rgba(255,255,255,.08);border-radius:24px;padding:14px}
+.planet{position:relative;aspect-ratio:1;max-width:100%;border-radius:50%;display:grid;place-items:center;font-size:clamp(24px,7vw,36px);background:rgba(255,255,255,.12);border:2px dashed rgba(255,255,255,.3)}
+.planet.seen{background:#fff;border:0;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.planet.next{border:3px solid var(--sun);background:rgba(255,198,58,.18)}
+.planet .rk{position:absolute;top:-14px;right:-6px;font-size:26px;animation:hop 2s ease-in-out infinite}
+.planet span.n{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;color:#cfd8ff}
+.planet.seen span.n{color:var(--ink-soft)}
+@keyframes hop{50%{transform:translateY(-5px) rotate(-8deg)}}
+.free{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.gamebtn{background:var(--card);border-radius:22px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+.gamebtn:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.gamebtn b{font-size:40px;line-height:1.1}
+.gamebtn span{font-weight:800;font-size:17px;line-height:1.1;text-align:center}
+.gamebtn small{font-size:13px;color:var(--ink-soft);font-weight:700}
+.parent{position:relative;overflow:hidden;align-self:center;margin-top:8px;background:rgba(255,255,255,.12);color:#e6ebff;border:2px solid rgba(255,255,255,.3);border-radius:999px;padding:8px 22px;display:flex;flex-direction:column;align-items:center;line-height:1.2}
+.parent span{font-weight:800;font-size:17px}
+.parent small{font-size:13px;opacity:.8}
+.parent i{position:absolute;inset:0 auto 0 0;width:0;background:rgba(255,198,58,.35);pointer-events:none}
+.parent.hold i{width:100%;transition:width 1.4s linear}
+
+/* play */
+.bar{display:flex;align-items:center;gap:12px;margin-top:12px}
+.back{background:var(--card);border-radius:16px;padding:8px 14px;font-weight:800;font-size:18px;box-shadow:0 4px 0 rgba(0,0,0,.25);flex:none}
+.back:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.track{position:relative;flex:1;height:12px;border-radius:99px;background:rgba(255,255,255,.2);margin-right:18px}
+.track .fill{position:absolute;inset:0 auto 0 0;width:0;border-radius:99px;background:var(--sun)}
+.track .rk{position:absolute;top:50%;left:0;transform:translate(-50%,-55%) rotate(45deg);font-size:28px}
+#play .panel{margin-top:14px}
+.guide{display:flex;align-items:center;gap:10px}
+.guide .fox{font-size:48px;line-height:1}
+.bubble{flex:1;min-width:0;background:#fff;border:3px solid var(--line);border-radius:20px;padding:8px 14px;font-size:clamp(18px,4.4vw,22px);font-weight:700;line-height:1.25;position:relative;min-height:1.25em}
+.bubble::before{content:"";position:absolute;left:-12px;top:50%;margin-top:-9px;border:9px solid transparent;border-right-color:var(--line);border-left:0}
+.listen{width:58px;height:58px;border-radius:50%;background:var(--coral);color:#fff;font-size:28px;box-shadow:0 5px 0 #c9553a;flex:none}
+.listen:active{transform:translateY(4px);box-shadow:0 1px 0 #c9553a}
+.stage{margin-top:18px;display:flex;flex-direction:column;align-items:center;gap:16px;min-height:360px}
+.bigicon{font-size:90px;line-height:1.1}
+.intro h3{margin:0;font-size:30px;text-align:center}
+.intro .skill{font-size:16px;color:var(--ink-soft);font-weight:700;text-align:center}
+.demo{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.demo div{background:#fff;border:3px solid var(--line);border-radius:18px;padding:8px 14px;display:flex;flex-direction:column;align-items:center;font-weight:800;font-size:16px;gap:2px}
+.demo div b{font-size:44px;line-height:1.1}
+.demo div.yes{border-color:var(--ok)} .demo div.no{border-color:var(--coral)}
+.count3{font-size:120px;font-weight:800;color:var(--violet);line-height:1;animation:pop .5s}
+@keyframes pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.1);opacity:1}}
+
+/* go/no-go */
+.tapzone{width:min(100%,360px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#2f3d8a 0 55%,#1d2660 56%);display:grid;place-items:center;box-shadow:0 8px 0 rgba(0,0,0,.25),inset 0 0 0 6px rgba(255,255,255,.15);transition:box-shadow .15s;touch-action:manipulation}
+.tapzone.good{box-shadow:0 8px 0 rgba(0,0,0,.25),inset 0 0 0 10px var(--mint)}
+.tapzone.oops{box-shadow:0 8px 0 rgba(0,0,0,.25),inset 0 0 0 10px var(--soft-no)}
+.gitem{font-size:110px;line-height:1;opacity:0;transform:scale(.6);transition:opacity .08s,transform .12s}
+.gitem.on{opacity:1;transform:scale(1)}
+.hint{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-weight:800;font-size:16px;color:var(--ink-soft)}
+.hint span{background:#fff;border-radius:999px;padding:2px 12px;border:2px solid var(--line)}
+
+/* flanker */
+.pond{width:100%;max-width:440px;height:220px;border-radius:24px;background:linear-gradient(180deg,#bfe9f3,#8fd3e6);position:relative;overflow:hidden}
+.school{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;gap:4px}
+.fish{width:clamp(48px,14vw,68px);height:auto;display:block}
+.dot{width:clamp(48px,14vw,68px);display:grid;place-items:center;font-size:30px;color:#4f8fa3}
+.plus{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:44px;font-weight:800;color:#4f8fa3}
+.arrows{display:flex;gap:28px}
+.arrow{width:120px;height:96px;border-radius:24px;background:#fff;border:4px solid var(--line);box-shadow:0 6px 0 var(--line);font-size:54px;font-weight:800;color:var(--violet);touch-action:manipulation}
+.arrow:active{transform:translateY(4px);box-shadow:0 2px 0 var(--line)}
+.arrow.right{background:var(--ok);border-color:var(--ok);color:#fff;box-shadow:0 6px 0 #2b8442}
+.arrow.nope{background:var(--soft-no);border-color:var(--soft-no)}
+
+/* search */
+.find{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800}
+.find b{font-family:var(--read);font-size:46px;background:#fff3c4;border:3px solid var(--sun);border-radius:16px;padding:0 14px;line-height:1.3}
+.sgrid{display:grid;gap:6px;width:100%;max-width:440px}
+.cell{aspect-ratio:1;max-width:100%;border-radius:14px;background:#fff;border:3px solid var(--line);display:grid;place-items:center;font-family:var(--read);font-weight:700;font-size:clamp(22px,6.5vw,36px);line-height:1;padding:0;touch-action:manipulation}
+.cell.emo{font-size:clamp(22px,6.5vw,34px)}
+.cell.right{background:#e8f7ea;border-color:var(--ok)}
+.cell.nope{animation:shake .35s}
+@keyframes shake{25%,75%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
+.small-count{font-size:18px;font-weight:800;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+
+/* corsi */
+.stones{position:relative;width:min(100%,340px);aspect-ratio:1;border-radius:26px;background:#2f3d8a}
+.stone{position:absolute;width:22%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:30%;background:#5b6bc0;box-shadow:0 5px 0 #1d2660;touch-action:manipulation}
+.stone.lit{background:var(--sun);box-shadow:0 0 0 6px rgba(255,198,58,.4),0 5px 0 #c58f12}
+.stone.tap{background:var(--mint)}
+.stone.bad{background:var(--soft-no)}
+
+/* mot */
+.space{position:relative;width:100%;max-width:440px;height:340px;border-radius:24px;background:#1d2660;overflow:hidden;touch-action:manipulation}
+.ball{position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:#7f8fe0;box-shadow:inset -6px -6px 0 rgba(0,0,0,.15);display:grid;place-items:center;font-size:22px;padding:0}
+.ball.t{background:var(--sun);box-shadow:0 0 0 6px rgba(255,198,58,.35)}
+.ball.pick{background:#fff}
+.ball.good{background:var(--ok)}
+.ball.bad{background:var(--soft-no)}
+.ball.missed{box-shadow:0 0 0 5px var(--sun)}
+
+/* breaks */
+.breath{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,#b9f0d8,var(--mint));display:grid;place-items:center;font-size:24px;font-weight:800;color:#1f5f45;transform:scale(.55);transition:transform 4s ease-in-out}
+.breath.in{transform:scale(1)}
+.move{font-size:96px;line-height:1}
+.movetxt{font-size:26px;font-weight:800;text-align:center;text-wrap:balance}
+.done-big{font-size:90px;line-height:1}
+.energy{font-size:44px;letter-spacing:4px;color:var(--sun);text-shadow:0 3px 0 #d79a12}
+.energy .off{color:#e2dccd;text-shadow:none}
+
+/* overlay */
+.over{position:fixed;inset:0;overflow-y:auto;align-items:safe center;background:rgba(10,14,40,.65);display:grid;place-items:center;padding:20px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));z-index:20}
+.card-big{background:var(--card);border-radius:30px;padding:24px 20px;max-width:440px;width:100%;text-align:center;box-shadow:0 10px 0 rgba(0,0,0,.3);box-sizing:border-box}
+.card-big h2{margin:0;font-size:32px;line-height:1.1;text-wrap:balance}
+.card-big p{font-size:19px;margin:8px 0 14px;color:var(--ink-soft);font-weight:600}
+.bigstars{font-size:62px;letter-spacing:6px;margin:8px 0;color:var(--sun);text-shadow:0 4px 0 #d79a12}
+.bigstars span{display:inline-block;animation:pop .5s backwards}
+.bigstars .off{color:#e2dccd;text-shadow:none}
+.newsticker{margin:8px auto 4px;width:120px;height:120px;border-radius:50%;background:#fff;border:6px dashed var(--sun);display:grid;place-items:center;font-size:70px;animation:spin .9s cubic-bezier(.4,1.6,.5,1) backwards .4s}
+@keyframes spin{from{transform:scale(0) rotate(-200deg)}}
+.focusnum{font-size:44px;font-weight:800;color:var(--violet);line-height:1.1;font-variant-numeric:tabular-nums}
+.rec{display:inline-block;background:var(--coral);color:#fff;border-radius:999px;padding:0 12px;font-weight:800;font-size:16px}
+.btnrow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.album{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:14px}
+.album div{aspect-ratio:1;max-width:100%;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:clamp(28px,8vw,40px);box-shadow:0 4px 0 var(--line)}
+.album div.empty{background:#efe6d2;color:#cbbd9c;font-size:22px;font-weight:800;box-shadow:none}
+
+/* parent panel */
+.pp{max-width:640px;text-align:left;font-family:var(--read)}
+.pp h2{font-family:var(--display);text-align:center}
+.pp h3{font-family:var(--display);font-size:21px;margin:22px 0 8px}
+.pp p,.pp li{font-size:15px;line-height:1.45;color:var(--ink);font-weight:400}
+.pp ul{padding-left:20px;margin:6px 0}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.tile{background:#fff;border:2px solid var(--line);border-radius:16px;padding:10px 12px;min-width:0}
+.tile small{display:block;font-size:13px;color:var(--ink-soft);font-weight:700;letter-spacing:.02em}
+.tile b{display:block;font-family:var(--display);font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile em{font-style:normal;font-size:13px;font-weight:700}
+.up{color:#2b8442} .down{color:#b4482e}
+.chart{background:#fff;border:2px solid var(--line);border-radius:16px;padding:10px;overflow-x:auto}
+.chart svg{display:block;width:100%;min-width:300px;height:auto}
+.chart .empty{font-size:14px;color:var(--ink-soft);padding:20px 6px;text-align:center}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th,.tbl td{text-align:left;padding:6px 4px;border-bottom:1px solid var(--line)}
+.tbl td.n{text-align:right;font-variant-numeric:tabular-nums}
+.tbl th{font-size:12px;color:var(--ink-soft);letter-spacing:.03em}
+.tblwrap{overflow-x:auto}
+.warn{background:#fff3e6;border:2px solid #f3c99a;border-radius:14px;padding:10px 12px;margin-top:14px}
+.backup{margin-top:16px;display:flex;flex-direction:column;gap:8px;background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px}
+.backup span{font-size:14px;color:var(--ink-soft);line-height:1.3}
+.backup textarea,.backup input{font:600 13px/1.3 ui-monospace,Menlo,monospace;border:2px solid var(--line);border-radius:10px;padding:8px;width:100%;box-sizing:border-box;resize:none;color:var(--ink);background:var(--card);user-select:text;-webkit-user-select:text}
+#codeMsg{font-size:14px;font-weight:700;color:var(--ok);min-height:1em}
+.reset{margin-top:16px;font-size:15px;color:var(--ink-soft);text-decoration:underline;font-weight:600}
+.confirm{margin-top:10px;display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;font-size:16px;font-weight:700}
+
+.fx{position:fixed;inset:0;pointer-events:none;z-index:30;overflow:hidden}
+.fx i{position:absolute;width:12px;height:16px;border-radius:3px;animation:fall 1.1s ease-out forwards}
+@keyframes fall{to{transform:translate(var(--dx),var(--dy)) rotate(540deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <div class="brand"><span class="fox" aria-hidden="true">🦊</span><h1>Odak Kampı<small>Sezen Lina'nın uzay yolculuğu</small></h1></div>
+    <button class="pill btn" id="soundBtn" aria-label="Sesi aç/kapat">🔊</button>
+    <button class="pill btn" id="albumBtn" aria-label="Sticker albümü">📒 <span id="stkCount">0</span></button>
+    <div class="pill" aria-label="Toplam yıldız">⭐ <span id="starCount">0</span></div>
+  </header>
+
+  <section id="home">
+    <div class="notice" id="voiceNote" hidden>Bu cihazda Türkçe ses bulunamadı. Sesler farklı bir aksanla çıkabilir.</div>
+    <div class="notice" id="pauseNote" hidden>Oyun yarıda kaldığı için durduruldu. İstediğin zaman yeniden başlayabilirsin.</div>
+    <div class="panel today" id="today"></div>
+    <div class="panel testcard" id="testCard"></div>
+    <h3 class="sec">Uzay yolculuğu</h3>
+    <div class="journey" id="journey"></div>
+    <h3 class="sec">Serbest oyun</h3>
+    <div class="free" id="free"></div>
+    <button class="parent" id="parentBtn"><i></i><span>Anne-baba paneli</span><small>Açmak için basılı tutun</small></button>
+  </section>
+
+  <section id="play" hidden>
+    <div class="bar">
+      <button class="back" id="quitBtn">← Çık</button>
+      <div class="track" aria-hidden="true"><div class="fill" id="trackFill"></div><span class="rk" id="trackRocket">🚀</span></div>
+    </div>
+    <div class="panel">
+      <div class="guide">
+        <span class="fox" aria-hidden="true">🦊</span>
+        <div class="bubble" id="bubble" role="status"></div>
+        <button class="listen" id="listenBtn" aria-label="Tekrar dinle">🔊</button>
+      </div>
+      <div class="stage" id="stage"></div>
+    </div>
+  </section>
+</div>
+<div id="overlay"></div>
+<div class="fx" id="fx"></div>
+
+<script>
+/* ---------- veri ---------- */
+const NAME = 'Sezen Lina';
+const TEST_MS = 240000;       // haftalık ölçüm: 4 dakika, sabit ayarlar (karşılaştırılabilir olsun)
+const SEG_MS = 20000;         // odak süresi 20 saniyelik dilimlerle hesaplanır
+const GAMES = {
+  gonogo:{name:'Yıldız Avcısı', icon:'⭐', skill:'Sürekli dikkat ve kendini durdurma',
+    intro:'Yıldız görünce dokun. Kuyruklu yıldız görünce dokunma, bekle.'},
+  flanker:{name:'Balık Sürüsü', icon:'🐟', skill:'Seçici dikkat: dikkat dağıtanı görmezden gelme',
+    intro:'Sadece ortadaki balığa bak. O hangi yöne yüzüyorsa o oka dokun.'},
+  search:{name:'Gizli Hazine', icon:'🔎', skill:'Görsel tarama ve odaklı arama',
+    intro:'Yukarıdakinin aynılarını bul. Hepsini bulunca yeni hazine gelir.'},
+  corsi:{name:'Işıklı Taşlar', icon:'💡', skill:'Çalışma belleği: aklında tutma',
+    intro:'Yanan taşları izle. Sonra aynı sırayla dokun.'},
+  mot:{name:'Gezegen Takibi', icon:'🪐', skill:'Takip etme ve bölünmüş dikkat',
+    intro:'Parlayan gezegenleri aklında tut. Hepsi karışınca gözünü ayırma, sonra onları bul.'}
+};
+const ROT = ['flanker','search','mot','corsi'];
+const PLANETS = [['Ay','🌙'],['Mars','🔴'],['Jüpiter','🟠'],['Satürn','🪐'],['Buz Gezegeni','🧊'],['Şeker Gezegeni','🍭'],['Çiçek Gezegeni','🌸'],
+  ['Kristal Gezegeni','💎'],['Bulut Gezegeni','☁️'],['Gökkuşağı Gezegeni','🌈'],['Volkan Gezegeni','🌋'],['Okyanus Gezegeni','🌊'],['Orman Gezegeni','🌳'],
+  ['Robot Gezegeni','🤖'],['Dinozor Gezegeni','🦖'],['Müzik Gezegeni','🎵'],['Meyve Gezegeni','🍓'],['Yıldız Tozu','✨'],['Uzay İstasyonu','🛰️'],['Güneş','☀️']];
+const STICKERS = ['👩‍🚀','🛸','🌠','🦄','🐙','🐳','🦋','🐝','🦖','🐉','🦉','🦔','🐼','🦁','🐬','🐢','🍦','🧁','🍉','🌻','🎈','🎨','🏆','👑','💎','🌈','🔭','🪁','🧸','🎁'];
+const PRAISE = [`Aferin ${NAME}!`,`Harikasın ${NAME}!`,`Çok güzel odaklandın ${NAME}!`,`Bravo ${NAME}!`,`Süpersin ${NAME}!`];
+const CHEER = [`Devam et ${NAME}, çok iyi gidiyorsun!`,`Başarabilirsin ${NAME}!`,`Gözün hedefte ${NAME}!`];
+const MOVES = [['🦘','Ayağa kalk, 5 kez zıpla!'],['🙆','Kollarını yukarı uzat, gökyüzüne dokun!'],['🔄','Omuzlarını 5 kez geriye çevir.'],
+  ['🪟','Pencereden uzağa bak, sonra parmağına bak. 3 kez.'],['🐢','Kaplumbağa gibi başını yavaşça sağa sola çevir.']];
+
+/* ---------- yardımcılar ---------- */
+const $ = s => document.querySelector(s);
+const el = (t,c,h) => { const e=document.createElement(t); if(c) e.className=c; if(h!=null) e.innerHTML=h; return e; };
+const rnd = a => a[Math.floor(Math.random()*a.length)];
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; };
+const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+const pct = x => Math.round(x*100)+'%';
+const dayKey = (d=new Date()) => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const daysBetween = (a,b) => Math.round((new Date(b)-new Date(a))/864e5);
+const fmtSec = s => { s=Math.round(s); const m=Math.floor(s/60), r=s%60; return m? (r? `${m} dk ${r} sn` : `${m} dk`) : `${r} sn`; };
+const fmtDate = k => { const [y,m,d]=k.split('-'); return `${+d}.${+m}`; };
+
+/* ---------- kayıt ---------- */
+const KEY = 'odak-kampi-v1';
+const freshGames = () => Object.fromEntries(Object.keys(GAMES).map(g=>[g,{lvl:1,dur:60}]));
+let save = {sound:true, stars:0, stickers:[], days:[], tests:[], games:freshGames(), blocks:[]};
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) { save = Object.assign(save, s); save.games = Object.assign(freshGames(), s.games||{}); } } catch(e){}
+const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(save)); } catch(e){} };
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch(e){}
+// Yedek kodu: blok ayrıntıları hariç her şey.
+function makeCode(){ const {blocks, ...rest} = save; return 'ODK-'+btoa(unescape(encodeURIComponent(JSON.stringify(rest)))); }
+function readCode(c){ try { const d=JSON.parse(decodeURIComponent(escape(atob(String(c).trim().replace(/^ODK-/i,''))))); return d && Array.isArray(d.days) && Array.isArray(d.tests) ? d : null; } catch(e){ return null; } }
+
+/* ---------- ses ---------- */
+let trVoice = null;
+function loadVoices(){ try { const v = speechSynthesis.getVoices(); trVoice = v.find(x=>/^tr/i.test(x.lang)) || null; if (v.length) $('#voiceNote').hidden = !!trVoice; } catch(e){} }
+if ('speechSynthesis' in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function say(parts, rate=0.9){
+  if (!save.sound || !('speechSynthesis' in window)) return;
+  try { speechSynthesis.cancel();
+    (Array.isArray(parts)?parts:[parts]).forEach(p=>{ const u=new SpeechSynthesisUtterance(p); u.lang='tr-TR'; if(trVoice) u.voice=trVoice; u.rate=rate; u.pitch=1.1; speechSynthesis.speak(u); });
+  } catch(e){}
+}
+const hush = () => { try{ speechSynthesis.cancel(); }catch(e){} };
+let actx;
+function tone(freqs, d=0.1, vol=0.18){
+  if (!save.sound) return;
+  try {
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const t = actx.currentTime;
+    freqs.forEach((f,i)=>{ const o=actx.createOscillator(), g=actx.createGain(); o.type='triangle'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t+i*d); g.gain.exponentialRampToValueAtTime(vol,t+i*d+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+i*d+d*2);
+      o.connect(g).connect(actx.destination); o.start(t+i*d); o.stop(t+i*d+d*2.2); });
+  } catch(e){}
+}
+let replay = () => {};
+const bubble = (t, speak) => { $('#bubble').textContent = t; replay = () => say(t); if (speak) say(t); };
+
+/* ---------- çalışma durumu (zamanlayıcılar tek yerden durur) ---------- */
+let R = null;
+function newRun(){ stopRun(); R = {timers:[], raf:0, raf2:0, t0:0, dur:0, key:null}; }
+function stopRun(){ if(!R) return; R.timers.forEach(clearTimeout); cancelAnimationFrame(R.raf); cancelAnimationFrame(R.raf2); R = null; }
+function later(f, ms){ const r=R; const id=setTimeout(()=>{ if(R===r) f(); }, ms); if(R) R.timers.push(id); return id; }
+const elapsed = () => performance.now() - R.t0;
+const timeUp = () => elapsed() >= R.dur;
+function setTrack(p){ $('#trackFill').style.width=(p*100)+'%'; $('#trackRocket').style.left=(p*100)+'%'; }
+function clock(dur){
+  R.t0 = performance.now(); R.dur = dur; const r=R;
+  const tick = () => { if (R!==r) return; const p=Math.min(1, elapsed()/dur); setTrack(p); if (p<1) R.raf = requestAnimationFrame(tick); };
+  tick();
+}
+
+/* ---------- ölçümler ---------- */
+// Her deneme: {t: bloğun başından ms, ok, rt?}. Odak süresi = art arda %85 ve üstü doğrulukla geçen 20 sn'lik dilimler.
+function summarize(tr, dur, extra={}){
+  const acc = a => a.length ? a.filter(x=>x.ok).length/a.length : 0;
+  const h1 = tr.filter(x=>x.t<dur/2), h2 = tr.filter(x=>x.t>=dur/2);
+  const rts = tr.filter(x=>x.rt && x.ok).map(x=>x.rt);
+  const m = rts.length ? rts.reduce((a,b)=>a+b,0)/rts.length : 0;
+  const sd = rts.length>1 ? Math.sqrt(rts.reduce((a,b)=>a+(b-m)**2,0)/(rts.length-1)) : 0;
+  const segs=[]; for (let a=0; a<dur; a+=SEG_MS){ const xs=tr.filter(x=>x.t>=a && x.t<a+SEG_MS); segs.push(xs.length ? acc(xs) : null); }
+  let run=0, best=0, sum=0; segs.forEach(a=>{ if(a===null) return; if(a>=.85){ run++; sum++; } else run=0; best=Math.max(best,run); });
+  const segSec = Math.min(SEG_MS, dur)/1000;
+  return {n:tr.length, acc:acc(tr), a1:acc(h1), a2:h2.length?acc(h2):acc(h1), rt:Math.round(m), cv:m?+(sd/m).toFixed(2):0,
+    focus:best*segSec, focusSum:sum*segSec, segs:segs.map(a=>a===null?null:Math.round(a*100)), ...extra};
+}
+function adapt(g, res){
+  const s = save.games[g];
+  if (g==='corsi') s.lvl = clamp(res.span-1, 1, 9);
+  else if (res.acc>=.9) s.lvl = Math.min(10, s.lvl+1);
+  else if (res.acc<.7) s.lvl = Math.max(1, s.lvl-1);
+  // Süre ancak bloğun ikinci yarısında da dikkat korunduysa uzar: dikkat süresi adım adım artar.
+  const thr = g==='corsi' ? .6 : g==='mot' ? .75 : .85;
+  if (res.acc>=thr && res.a2>=res.a1-.1) s.dur = Math.min(240, s.dur+15);
+  else if (res.acc<thr-.2) s.dur = Math.max(45, s.dur-15);
+}
+
+/* ---------- oyunlar ---------- */
+const RUN = {};
+
+// 1) Yıldız Avcısı: Go/No-Go (SART ve CPT türü sürekli dikkat görevleri gibi).
+function gngParams(lvl, test){
+  if (test) return {show:1000, isi:1000, pNo:.25, nogo:['☄️']};
+  return {show:Math.max(650,1300-lvl*65), isi:Math.max(500,950-lvl*45), pNo:Math.min(.32,.2+lvl*.012),
+    nogo: lvl<4?['☄️']: lvl<7?['☄️','🌙']:['☄️','🌙','💫']};
+}
+RUN.gonogo = (st, lvl, dur, fin, test) => {
+  const P = gngParams(lvl, test);
+  st.innerHTML='';
+  const hint = el('div','hint',`<span>⭐ dokun</span><span>${P.nogo.join(' ')} dokunma</span>`);
+  const pad = el('button','tapzone'); pad.setAttribute('aria-label','Dokunma alanı');
+  const item = el('div','gitem'); pad.append(item); st.append(hint, pad);
+  const tr=[]; let cur=null, lastNo=0;
+  const close = () => { if(!cur) return; tr.push(cur.go ? {t:cur.t, ok:cur.resp, rt:cur.rt, go:1} : {t:cur.t, ok:!cur.resp, go:0}); cur=null; };
+  const next = () => {
+    close();
+    if (timeUp()) { const s=summarize(tr,dur); const go=tr.filter(x=>x.go), no=tr.filter(x=>!x.go);
+      s.om = go.length ? go.filter(x=>!x.ok).length/go.length : 0; s.fa = no.length ? no.filter(x=>!x.ok).length/no.length : 0; fin(s); return; }
+    const no = lastNo<2 && Math.random()<P.pNo; lastNo = no ? lastNo+1 : 0;
+    cur = {t:elapsed(), go:!no, at:performance.now(), resp:false};
+    item.textContent = no ? rnd(P.nogo) : '⭐'; item.className='gitem on';
+    later(()=>{ item.className='gitem'; }, P.show);
+    later(next, P.show+P.isi);
+  };
+  const hit = () => { if(!cur || cur.resp) return; cur.resp=true; cur.rt=performance.now()-cur.at;
+    if (cur.go){ pad.classList.add('good'); tone([880],.05,.12); setTimeout(()=>pad.classList.remove('good'),180); }
+    else { pad.classList.add('oops'); tone([300],.07,.12); setTimeout(()=>pad.classList.remove('oops'),260); } };
+  pad.onpointerdown = e => { e.preventDefault(); hit(); };
+  R.key = e => { if (e.code==='Space'||e.key==='Enter'){ e.preventDefault(); hit(); } };
+  later(next, 500);
+};
+
+// 2) Balık Sürüsü: çocuklar için Dikkat Ağı Testi'ndeki (Rueda ve ark. 2004) flanker görevi.
+const fishSvg = (d, gold) => `<svg class="fish" viewBox="0 0 60 36" style="transform:scaleX(${d})" aria-hidden="true"><path d="M2 5 L17 18 L2 31 Z" fill="${gold?'#f0a500':'#ff8a5c'}"/><ellipse cx="35" cy="18" rx="22" ry="13" fill="${gold?'#ffc63a':'#ff9f7a'}"/><circle cx="47" cy="14" r="3.2" fill="#24344f"/></svg>`;
+RUN.flanker = (st, lvl, dur, fin) => {
+  st.innerHTML='';
+  const pond = el('div','pond'), arrows = el('div','arrows');
+  const L = el('button','arrow','◀'), Rt = el('button','arrow','▶'); L.setAttribute('aria-label','Sola'); Rt.setAttribute('aria-label','Sağa');
+  arrows.append(L,Rt); st.append(pond, arrows);
+  const pInc = Math.min(.6,.3+lvl*.03), pNeu = lvl<=3 ? .3 : 0, win = Math.max(1300, 2600-lvl*130);
+  const tr=[]; let cur=null;
+  const trial = () => {
+    if (timeUp()) { const s=summarize(tr,dur); const ri=tr.filter(x=>x.ok&&x.inc), rc=tr.filter(x=>x.ok&&!x.inc);
+      const mean=a=>a.length?a.reduce((x,y)=>x+y.rt,0)/a.length:0; s.conflict = ri.length&&rc.length ? Math.round(mean(ri)-mean(rc)) : null; fin(s); return; }
+    [L,Rt].forEach(b=>b.className='arrow');
+    pond.innerHTML='<div class="plus">+</div>';
+    later(()=>{
+      const d = Math.random()<.5 ? 1 : -1, r=Math.random(), kind = r<pNeu ? 'neu' : r<pNeu+pInc ? 'inc' : 'con';
+      const school = el('div','school');
+      for (let i=0;i<5;i++){ if (i===2) school.innerHTML += fishSvg(d, lvl<=2);
+        else school.innerHTML += kind==='neu' ? '<div class="dot">○</div>' : fishSvg(kind==='inc'?-d:d, false); }
+      if (lvl>=5) school.style.top = (25+Math.random()*50)+'%';
+      pond.innerHTML=''; pond.append(school);
+      cur = {t:elapsed(), d, inc:kind==='inc', at:performance.now()};
+      const c=cur; later(()=>{ if(cur===c){ tr.push({t:c.t, ok:false, inc:c.inc}); cur=null; pond.innerHTML=''; later(trial,500); } }, win);
+    }, 450+Math.random()*250);
+  };
+  const answer = (d, b) => { if(!cur) return; const c=cur; cur=null; const ok = d===c.d;
+    tr.push({t:c.t, ok, rt:performance.now()-c.at, inc:c.inc}); b.classList.add(ok?'right':'nope'); tone(ok?[784]:[300],.06,.12);
+    later(()=>{ pond.innerHTML=''; trial(); }, 380); };
+  L.onpointerdown = e => { e.preventDefault(); answer(-1, L); };
+  Rt.onpointerdown = e => { e.preventDefault(); answer(1, Rt); };
+  R.key = e => { if (e.key==='ArrowLeft') answer(-1,L); if (e.key==='ArrowRight') answer(1,Rt); };
+  later(trial, 300);
+};
+
+// 3) Gizli Hazine: görsel tarama (iptal/arama görevleri). Zorluk: ızgara büyür, çeldiriciler benzeşir.
+const SEARCH_GRID = [null,[4,3],[4,4],[4,5],[5,4],[5,5],[5,6],[6,5],[6,6],[6,6],[6,6]];
+function searchSet(lvl){
+  if (lvl===1) return {t:'🐞', d:['🌸','🍃'], emo:1};
+  if (lvl===2) return {t:'🐞', d:['🌸','🍃','🐜'], emo:1};
+  if (lvl===3) return {t:'🐞', d:['🐜','🦗','🕷️','🐝'], emo:1};
+  if (lvl===4) return {t:'o', d:['a','e','n','t','i','l']};
+  if (lvl===5) return {t:'o', d:['a','e','c']};
+  if (lvl===6) return {t:'o', d:['c','e','a','u']};
+  if (lvl===7) return {t:'n', d:['m','h','u']};
+  return {t:'b', d:['d','p','q']};
+}
+RUN.search = (st, lvl, dur, fin) => {
+  const S = searchSet(lvl), [cols,rows] = SEARCH_GRID[lvl], n = cols*rows, k = 3+(n>24?1:0)+(n>30?1:0);
+  const tr=[]; let screens=0, found=0;
+  const screen = () => {
+    if (timeUp()) { fin(summarize(tr,dur,{perMin: +(found/(dur/60000)).toFixed(1), screens})); return; }
+    st.innerHTML='';
+    const head = el('div','find',`Bunu bul: <b>${S.t}</b>`), cnt = el('div','small-count');
+    const grid = el('div','sgrid'); grid.style.gridTemplateColumns = `repeat(${cols},minmax(0,1fr))`;
+    const pos = new Set(shuffle([...Array(n).keys()]).slice(0,k)); let got=0;
+    const upd = () => cnt.textContent = `${got} / ${k}`; upd();
+    for (let i=0;i<n;i++){ const isT = pos.has(i); const b = el('button','cell'+(S.emo?' emo':''), isT?S.t:rnd(S.d));
+      b.onclick = () => { if (b.classList.contains('right')) return;
+        if (isT){ b.classList.add('right'); got++; found++; upd(); tr.push({t:elapsed(), ok:true}); tone([660+got*60],.05,.12);
+          if (got===k){ screens++; tone([523,659,784],.08,.12); later(screen, 500); } }
+        else { b.classList.remove('nope'); void b.offsetWidth; b.classList.add('nope'); tr.push({t:elapsed(), ok:false}); tone([300],.06,.1); } };
+      grid.append(b); }
+    st.append(head, grid, cnt);
+  };
+  // Süre bitince yarım kalan ekranı da sayarak bitir.
+  later(()=>{ if (st.querySelector('.sgrid')) fin(summarize(tr,dur,{perMin:+(found/(dur/60000)).toFixed(1), screens})); }, dur+50);
+  screen();
+};
+
+// 4) Işıklı Taşlar: Corsi blok görevi (görsel-uzamsal çalışma belleği). Seviye = başlangıç dizisi uzunluğu - 1.
+const STONES = [[16,18],[50,12],[84,22],[26,50],[62,44],[86,62],[14,82],[48,78],[80,88]];
+RUN.corsi = (st, lvl, dur, fin) => {
+  st.innerHTML='';
+  const box = el('div','stones'); const bs = STONES.map(([x,y])=>{ const b=el('button','stone'); b.style.left=x+'%'; b.style.top=y+'%'; b.setAttribute('aria-label','Taş'); box.append(b); return b; });
+  const info = el('div','small-count'); st.append(box, info);
+  let span = lvl+1, streak=0, best=0, seq=[], pos=0, input=false; const tr=[];
+  const trial = () => {
+    if (timeUp()) { fin(summarize(tr,dur,{span:Math.max(best,2)})); return; }
+    input=false; pos=0; info.textContent = `${span} taş`;
+    seq=[]; while(seq.length<span){ const i=Math.floor(Math.random()*9); if(!seq.includes(i)) seq.push(i); }
+    bubble('İzle...');
+    const t0 = elapsed();
+    seq.forEach((i,n)=>{ later(()=>{ bs[i].classList.add('lit'); tone([392+i*40],.08,.12); }, 700+n*950); later(()=>bs[i].classList.remove('lit'), 700+n*950+650); });
+    later(()=>{ input=true; seq.t0=t0; bubble('Şimdi sen! Aynı sırayla dokun.'); }, 700+span*950);
+  };
+  const end = ok => { input=false; tr.push({t:seq.t0, ok});
+    if (ok){ best=Math.max(best,span); streak++; tone([523,659,784],.08,.12); if (streak>=2){ span=Math.min(9,span+1); streak=0; } }
+    else { streak=0; span=Math.max(2,span-1); tone([330,262],.1,.12); bubble(rnd(CHEER)); seq.forEach(i=>bs[i].classList.add('lit')); }
+    later(()=>{ bs.forEach(b=>b.className='stone'); trial(); }, ok?700:1300); };
+  bs.forEach((b,i)=>b.onclick=()=>{ if(!input) return;
+    if (i===seq[pos]){ b.classList.add('tap'); later(()=>b.classList.remove('tap'),250); pos++; if (pos===seq.length) end(true); }
+    else { b.classList.add('bad'); end(false); } });
+  later(trial, 200);
+};
+
+// 5) Gezegen Takibi: çoklu nesne takibi (Pylyshyn ve Storm 1988).
+RUN.mot = (st, lvl, dur, fin) => {
+  st.innerHTML='';
+  const box = el('div','space'); st.append(box);
+  const n = Math.min(10, 4+Math.ceil(lvl/2)), k = Math.min(4, 1+Math.floor(lvl/3)), speed = 60+lvl*12, track = 4000+lvl*400;
+  const tr=[];
+  const trial = () => {
+    if (timeUp()) { fin(summarize(tr,dur)); return; }
+    box.innerHTML=''; const W=box.clientWidth, H=box.clientHeight, t0=elapsed();
+    const balls=[];
+    for (let i=0;i<n;i++){ let x,y,tries=0; do { x=30+Math.random()*(W-60); y=30+Math.random()*(H-60); tries++; } while (tries<50 && balls.some(b=>Math.hypot(b.x-x,b.y-y)<56));
+      const a=Math.random()*Math.PI*2; const e=el('button','ball'); e.setAttribute('aria-label','Gezegen'); box.append(e);
+      balls.push({x,y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,e,t:i<k}); }
+    const draw = () => balls.forEach(b=>{ b.e.style.left=b.x+'px'; b.e.style.top=b.y+'px'; });
+    draw(); balls.forEach(b=>{ if(b.t){ b.e.classList.add('t'); b.e.textContent='⭐'; } });
+    bubble(k>1 ? `${k} parlayan gezegeni aklında tut!` : 'Parlayan gezegeni aklında tut!');
+    later(()=>{
+      balls.forEach(b=>{ b.e.className='ball'; b.e.textContent=''; });
+      bubble('Gözünü ayırma...');
+      let last=performance.now(); const stopAt=last+track; const r=R;
+      const step = now => { if (R!==r) return; const dt=Math.min(.05,(now-last)/1000); last=now;
+        balls.forEach(b=>{ if (Math.random()<.01){ const a=Math.atan2(b.vy,b.vx)+(Math.random()-.5); b.vx=Math.cos(a)*speed; b.vy=Math.sin(a)*speed; }
+          b.x+=b.vx*dt; b.y+=b.vy*dt; if(b.x<24){b.x=24;b.vx*=-1;} if(b.x>W-24){b.x=W-24;b.vx*=-1;} if(b.y<24){b.y=24;b.vy*=-1;} if(b.y>H-24){b.y=H-24;b.vy*=-1;} });
+        draw(); if (now<stopAt) R.raf2=requestAnimationFrame(step); else pick(); };
+      R.raf2=requestAnimationFrame(step);
+    }, 2200);
+    const pick = () => {
+      bubble(k>1 ? `Parlayan ${k} gezegeni bul!` : 'Parlayan gezegeni bul!');
+      let picks=0;
+      balls.forEach(b=>b.e.onclick=()=>{ if (b.picked || picks>=k) return; b.picked=true; picks++; b.e.classList.add('pick'); tone([600+picks*80],.05,.1);
+        if (picks===k){ let good=0;
+          balls.forEach(x=>{ if(x.picked){ x.e.classList.add(x.t?'good':'bad'); if(x.t) good++; tr.push({t:t0, ok:x.t}); } else if(x.t) x.e.classList.add('missed'); });
+          if (good===k){ tone([523,659,784],.08,.12); bubble(rnd(PRAISE)); } else bubble(rnd(CHEER));
+          later(trial, 1500); } });
+    };
+  };
+  later(trial, 300);
+};
+
+/* ---------- akış ---------- */
+let flow = null;
+function show(id){ ['home','play'].forEach(s=>$('#'+s).hidden = s!==id); window.scrollTo(0,0); }
+function todayPlan(){ const n=save.days.length; return [ROT[n%4], 'gonogo', ROT[(n+1)%4]]; }
+const doneToday = () => save.days.some(d=>d.d===dayKey());
+function begin(mode, steps){ $('#pauseNote').hidden=true; flow={mode, steps, i:0, results:[]}; show('play'); step(); }
+function startSession(){ const p=todayPlan(), steps=[]; p.forEach((g,k)=>{ if(k) steps.push({brk:k}); steps.push({g}); }); begin('session', steps); }
+function step(){ const s=flow.steps[flow.i]; if(!s){ finishFlow(); return; } if (s.brk) breakScreen(s.brk); else intro(s); }
+
+function intro(s){
+  newRun(); setTrack(0);
+  const G = GAMES[s.g], st=$('#stage'); st.innerHTML='';
+  const dur = s.test ? TEST_MS : save.games[s.g].dur*1000;
+  const box = el('div','stage intro'); box.style.margin='0';
+  box.append(el('div','bigicon',G.icon), el('h3','',s.test?'Dikkat Ölçümü':G.name), el('div','skill', s.test?`${fmtSec(dur/1000)} sürer. Elinden gelenin en iyisini yap!`:`${G.skill} · ${fmtSec(dur/1000)}`));
+  if (s.g==='gonogo') box.append(el('div','demo',`<div class="yes"><b>⭐</b>Dokun</div><div class="no"><b>☄️</b>Dokunma</div>`));
+  if (s.g==='flanker') box.append(el('div','demo',`<div class="yes"><b style="display:flex">${fishSvg(1,1)}</b>▶ sağ</div><div class="yes"><b style="display:flex">${fishSvg(-1,1)}</b>◀ sol</div>`));
+  const go = el('button','go','Hazırım'); box.append(go); st.append(box);
+  const text = s.test ? `Şimdi dikkat ölçümü yapacağız ${NAME}. ${G.intro} Biraz uzun sürecek, sakin ol ve gözünü ortadan ayırma.` : G.intro;
+  bubble(text, true);
+  go.onclick = () => { hush(); countdown(()=>block(s, dur)); };
+}
+function countdown(then){
+  const st=$('#stage'); let n=3;
+  const tick = () => { st.innerHTML=''; if (n===0){ then(); return; } st.append(el('div','count3',n)); tone([440+(3-n)*110],.1,.14); n--; later(tick, 800); };
+  bubble('Hazır ol...'); tick();
+}
+function block(s, dur){
+  const lvl = s.test ? 5 : save.games[s.g].lvl;
+  bubble(GAMES[s.g].intro);
+  clock(dur);
+  if (dur>=60000) later(()=>{ $('#bubble').textContent = `Yarıladın! Devam et ${NAME}.`; tone([660,880],.08,.08); }, dur/2);
+  RUN[s.g]($('#stage'), lvl, dur, res => {
+    const r=R; if (!r) return; stopRun(); hush(); setTrack(1);
+    Object.assign(res, {g:s.g, lvl, sec:dur/1000, d:dayKey(), test:!!s.test});
+    if (!s.test) adapt(s.g, res);
+    save.blocks.push(res); save.blocks = save.blocks.slice(-150);
+    flow.results.push(res); persist();
+    blockDone(res);
+  }, s.test);
+}
+function blockDone(res){
+  newRun();
+  const st=$('#stage'); st.innerHTML='';
+  const e = res.acc>=.85?3:res.acc>=.65?2:1;
+  st.append(el('div','done-big','🌟'), el('div','energy',[0,1,2].map(k=>`<span class="${k<e?'':'off'}">★</span>`).join('')));
+  const last = flow.i===flow.steps.length-1;
+  const msg = e===3 ? rnd(PRAISE) : e===2 ? `Çok iyi gidiyorsun ${NAME}!` : `Bitirdin ${NAME}! Her seferinde daha da güçleneceksin.`;
+  bubble(msg, true); tone([523,659,784,1046]); burst();
+  const go = el('button','go', last?'Bitir 🎉':'Devam'); st.append(go);
+  go.onclick = () => { flow.i++; step(); };
+}
+function breakScreen(k){
+  newRun(); setTrack(0); const st=$('#stage'); st.innerHTML='';
+  const go = el('button','go','Hazırım'); go.disabled=true;
+  if (k%2){ // nefes molası: 4 sn al, 4 sn ver, 3 tur
+    const b = el('div','breath','Nefes al'); st.append(el('h3','','Nefes Molası'), b, go);
+    bubble('Balonla birlikte nefes al, sonra yavaşça ver.', true);
+    let n=0; const cyc = () => { if (n>=6){ b.textContent='Aferin!'; go.disabled=false; return; } const inh = n%2===0; b.classList.toggle('in', inh); b.textContent = inh?'Nefes al':'Nefes ver'; n++; later(cyc, 4000); };
+    later(cyc, 300); later(()=>go.disabled=false, 9000);
+  } else { // hareket molası
+    const [ic, tx] = rnd(MOVES); st.append(el('h3','','Hareket Molası'), el('div','move',ic), el('div','movetxt',tx), go);
+    bubble(tx, true); later(()=>go.disabled=false, 6000);
+  }
+  go.onclick = () => { hush(); flow.i++; step(); };
+}
+
+function finishFlow(){
+  newRun(); stopRun(); const res=flow.results; const mode=flow.mode; flow=null;
+  if (!res.length){ show('home'); renderHome(); return; }
+  let sticker=null; const left=STICKERS.filter(s=>!save.stickers.includes(s));
+  if (mode!=='free' && left.length){ sticker=rnd(left); save.stickers.push(sticker); }
+  const avg = res.reduce((a,b)=>a+b.acc,0)/res.length;
+  const focusSum = res.reduce((a,b)=>a+b.focusSum,0), focusMax = Math.max(...res.map(b=>b.focus));
+  let html='';
+  if (mode==='session'){
+    const stars = avg>=.8?3:avg>=.6?2:1; save.stars += stars;
+    const mins = res.reduce((a,b)=>a+b.sec,0)/60;
+    const prevBest = Math.max(0, ...save.days.map(d=>d.focusMax||0));
+    save.days.push({d:dayKey(), mins:+mins.toFixed(1), acc:+avg.toFixed(2), focusSum, focusMax, stars});
+    const pl = PLANETS[(save.days.length-1)%PLANETS.length];
+    html = `<h2>${pl[1]} ${pl[0]} durağına ulaştın!</h2>
+      <div class="bigstars">${[0,1,2].map(k=>`<span class="${k<stars?'':'off'}" style="animation-delay:${k*.25}s">★</span>`).join('')}</div>
+      <p>Bugün toplam odaklandığın süre</p><div class="focusnum">${fmtSec(focusSum)}</div>
+      ${focusMax>prevBest && save.days.length>1?'<div class="rec">Yeni rekor!</div>':''}
+      ${sticker?`<div class="newsticker">${sticker}</div><p>Yeni sticker albümüne eklendi!</p>`:''}`;
+    say([`Harikasın ${NAME}!`, `Bugünün görevini bitirdin.`, ...(sticker?['Yeni bir sticker kazandın!']:[])]);
+  } else if (mode==='test'){
+    const t=res[0]; const score=Math.round(100*(.4*(1-t.om)+.3*(1-t.fa)+.3*(t.focus/(t.sec))));
+    const prevBest = Math.max(0, ...save.tests.map(x=>x.focus));
+    save.tests.push({d:dayKey(), score, acc:+t.acc.toFixed(2), om:+t.om.toFixed(2), fa:+t.fa.toFixed(2), rt:t.rt, cv:t.cv, focus:t.focus, a1:+t.a1.toFixed(2), a2:+t.a2.toFixed(2), segs:t.segs});
+    save.stars += 3;
+    html = `<h2>Ölçüm bitti!</h2><p>Kesintisiz odaklandığın en uzun süre</p><div class="focusnum">${fmtSec(t.focus)}</div>
+      ${save.tests.length>1 && t.focus>prevBest?'<div class="rec">Yeni rekor!</div>':''}
+      ${sticker?`<div class="newsticker">${sticker}</div><p>Teşekkürler ${NAME}! Yeni sticker kazandın.</p>`:''}`;
+    say([`Teşekkürler ${NAME}!`, 'Ölçüm bitti. Çok sabırlıydın.']);
+  } else {
+    const r=res[0]; const e=r.acc>=.85?3:r.acc>=.65?2:1; save.stars += 1;
+    html = `<h2>${GAMES[r.g].name} bitti!</h2><div class="bigstars">${[0,1,2].map(k=>`<span class="${k<e?'':'off'}">★</span>`).join('')}</div><p>Bir yıldız kazandın!</p>`;
+  }
+  persist();
+  $('#overlay').innerHTML = `<div class="over"><div class="card-big">${html}<div class="btnrow"><button class="go" id="toHome">Ana ekrana dön</button></div></div></div>`;
+  tone([523,659,784,1046,1318],.12); burst(); burst();
+  $('#toHome').onclick = () => { $('#overlay').innerHTML=''; show('home'); renderHome(); };
+}
+function quit(){ stopRun(); hush(); flow=null; show('home'); renderHome(); }
+
+/* ---------- ana ekran ---------- */
+function renderHome(){
+  $('#starCount').textContent = save.stars; $('#stkCount').textContent = save.stickers.length; $('#soundBtn').textContent = save.sound?'🔊':'🔇';
+  const t=$('#today'); const plan=todayPlan();
+  if (doneToday()){
+    t.innerHTML = `<h2>Bugünün görevi tamam! 🎉</h2><p>Aferin ${NAME}! Yarın yeni bir gezegene uçacağız. İstersen aşağıdan serbest oyun oynayabilirsin.</p>`;
+  } else {
+    const sec = plan.reduce((a,g)=>a+save.games[g].dur,0) + 2*30;
+    t.innerHTML = `<h2>Bugünün görevi</h2><p>Yaklaşık ${Math.round(sec/60)} dakika. Sonunda yeni bir gezegene ulaşacaksın!</p>
+      <div class="chips">${plan.map((g,k)=>(k?`<span class="chip rest">${k%2?'🫧 Nefes':'🤸 Hareket'}</span>`:'')+`<span class="chip"><b>${GAMES[g].icon}</b>${GAMES[g].name}</span>`).join('')}</div>
+      <button class="go" id="startBtn">Göreve başla 🚀</button>`;
+    $('#startBtn').onclick = startSession;
+  }
+  const c=$('#testCard'); const lt=save.tests[save.tests.length-1]; const ago = lt ? daysBetween(lt.d, dayKey()) : null;
+  const due = !lt || ago>=7;
+  c.innerHTML = `<div class="bigicon" style="font-size:56px">📏</div><div class="txt"><h2>Dikkat Ölçümü</h2>
+    <p>${!lt ? 'İlk önce 4 dakikalık kısa bir ölçüm yapalım. Böylece ne kadar geliştiğini görebiliriz.' : `Son ölçüm ${ago===0?'bugün':ago+' gün önce'}. Haftada bir kez yapılır.`}</p>
+    ${due?'<span class="badge">Ölçüm zamanı</span>':''}</div><button class="go ${due?'blue':'blue small'}" id="testBtn">${due?'Ölçümü başlat':'Yine de ölç'}</button>`;
+  $('#testBtn').onclick = () => begin('test', [{g:'gonogo', test:true}]);
+  const j=$('#journey'); j.innerHTML='';
+  const done=save.days.length, base=Math.floor(done/PLANETS.length)*PLANETS.length;
+  PLANETS.forEach(([nm,ic],i)=>{ const idx=base+i; const p=el('div','planet'+(idx<done?' seen':idx===done?' next':''), idx<done||idx===done?ic:'');
+    p.title=nm; p.innerHTML += `<span class="n">${idx+1}</span>` + (idx===done?'<span class="rk" aria-hidden="true">🚀</span>':''); j.append(p); });
+  const f=$('#free'); f.innerHTML='';
+  Object.entries(GAMES).forEach(([g,G])=>{ const b=el('button','gamebtn',`<b>${G.icon}</b><span>${G.name}</span><small>Seviye ${save.games[g].lvl}</small>`);
+    b.onclick=()=>begin('free',[{g}]); f.append(b); });
+}
+
+/* ---------- veli paneli ---------- */
+function lineChart(pts, opt){ // pts: [{x:label, y:number}]
+  if (pts.length<2) return `<div class="empty">${opt.empty}</div>`;
+  const W=600,H=200,l=44,r=16,t=16,b=30, max=opt.max ?? (Math.max(...pts.map(p=>p.y))*1.15 || 1);
+  const X=i=>l+(W-l-r)*(pts.length===1?.5:i/(pts.length-1)), Y=v=>t+(H-t-b)*(1-v/max);
+  const ticks=[0,max/2,max].map(v=>`<line x1="${l}" x2="${W-r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#ece3cf"/><text x="${l-8}" y="${Y(v)+4}" text-anchor="end" font-size="12" fill="#5a6883">${opt.fmt(v)}</text>`).join('');
+  const d=pts.map((p,i)=>`${i?'L':'M'}${X(i)} ${Y(p.y)}`).join(' ');
+  const area=`${d} L${X(pts.length-1)} ${Y(0)} L${X(0)} ${Y(0)} Z`;
+  const step=Math.ceil(pts.length/7);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opt.label}">${ticks}
+    <path d="${area}" fill="${opt.color}" fill-opacity=".12"/><path d="${d}" fill="none" stroke="${opt.color}" stroke-width="2.5" stroke-linejoin="round"/>
+    ${pts.map((p,i)=>`<g><circle cx="${X(i)}" cy="${Y(p.y)}" r="${i===pts.length-1?6:4}" fill="${opt.color}" stroke="#fff" stroke-width="2"/><circle cx="${X(i)}" cy="${Y(p.y)}" r="14" fill="transparent"><title>${p.x}: ${opt.fmt(p.y)}</title></circle></g>`).join('')}
+    ${pts.map((p,i)=>i%step===0||i===pts.length-1?`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="12" fill="#5a6883">${p.x}</text>`:'').join('')}
+    <text x="${X(pts.length-1)}" y="${Y(pts[pts.length-1].y)-12}" text-anchor="end" font-size="13" font-weight="700" fill="#24344f">${opt.fmt(pts[pts.length-1].y)}</text></svg>`;
+}
+function openParent(){
+  const T=save.tests, D=save.days, f=T[0], l=T[T.length-1];
+  const diff = (a,b,unit='',inv) => { if(a==null||b==null||T.length<2) return ''; const v=a-b; if(!v) return '<em>ilk ölçümle aynı</em>'; const good=inv? v<0 : v>0;
+    return `<em class="${good?'up':'down'}">ilk ölçüme göre ${v>0?'+':''}${unit==='sn'?fmtSec(Math.abs(v)).replace(/^/,v<0?'-':''):v+unit}</em>`; };
+  const week = D.filter(d=>daysBetween(d.d,dayKey())<7);
+  const rows = Object.entries(GAMES).map(([g,G])=>`<tr><td>${G.icon} ${G.name}</td><td>${G.skill}</td><td class="n">${save.games[g].lvl}</td><td class="n">${fmtSec(save.games[g].dur)}</td></tr>`).join('');
+  $('#overlay').innerHTML = `<div class="over"><div class="card-big pp">
+    <h2>Anne-baba paneli</h2>
+    <div class="tiles">
+      <div class="tile"><small>Son dikkat puanı (0-100)</small><b>${l?l.score:'–'}</b>${l?diff(l.score,f.score):''}</div>
+      <div class="tile"><small>Kesintisiz odak (son ölçüm)</small><b>${l?fmtSec(l.focus):'–'}</b>${l?diff(l.focus,f.focus,'sn'):''}</div>
+      <div class="tile"><small>Tamamlanan görev günü</small><b>${D.length}</b></div>
+      <div class="tile"><small>Son 7 gün çalışma</small><b>${Math.round(week.reduce((a,d)=>a+d.mins,0))} dk</b><em>${week.length} gün</em></div>
+    </div>
+    <h3>Haftalık ölçüm: dikkat puanı</h3>
+    <div class="chart">${lineChart(T.map(t=>({x:fmtDate(t.d),y:t.score})),{max:100,fmt:v=>Math.round(v),color:'#6253c9',label:'Ölçümlere göre dikkat puanı',empty:'Grafik için en az iki ölçüm gerekiyor. Ölçümü haftada bir, aynı saatte yapın.'})}</div>
+    <h3>Günlük görevlerde odaklı süre</h3>
+    <div class="chart">${lineChart(D.slice(-21).map(d=>({x:fmtDate(d.d),y:d.focusSum})),{fmt:v=>fmtSec(v),color:'#2b8442',label:'Gün gün toplam odaklı süre',empty:'Grafik için en az iki görev günü gerekiyor.'})}</div>
+    ${l?`<h3>Son ölçümün ayrıntısı (${fmtDate(l.d)})</h3><div class="tblwrap"><table class="tbl">
+      <tr><th>Ölçü</th><th>Ne anlama gelir</th><th style="text-align:right">Değer</th></tr>
+      <tr><td>Kaçırma oranı</td><td>Dikkatin dağıldığı anlar (yıldıza dokunmadı)</td><td class="n">${pct(l.om)}</td></tr>
+      <tr><td>Yanlış dokunma</td><td>Kendini durdurmada zorlanma (kuyruklu yıldıza dokundu)</td><td class="n">${pct(l.fa)}</td></tr>
+      <tr><td>Tepki süresi</td><td>Doğru dokunuşlarda ortalama</td><td class="n">${l.rt} ms</td></tr>
+      <tr><td>Tepki tutarlılığı</td><td>Değişkenlik katsayısı; düştükçe dikkat daha dengeli</td><td class="n">${l.cv}</td></tr>
+      <tr><td>İlk yarı / ikinci yarı</td><td>Sonlara doğru doğruluk düşüşü dikkatin yorulduğunu gösterir</td><td class="n">${pct(l.a1)} / ${pct(l.a2)}</td></tr>
+    </table></div>`:''}
+    <h3>Oyunların şu anki seviyesi</h3>
+    <div class="tblwrap"><table class="tbl"><tr><th>Oyun</th><th>Çalıştırdığı beceri</th><th style="text-align:right">Seviye</th><th style="text-align:right">Blok süresi</th></tr>${rows}</table></div>
+    <p>Seviye, doğruluk %90'ı geçince artar, %70'in altına inince azalır. Blok süresi ise ancak çocuk bloğun ikinci yarısında da dikkatini koruyabildiyse 15 saniye uzar (en fazla 4 dakika). Böylece dikkat süresi kendi hızında, adım adım artar.</p>
+    <h3>Nasıl kullanmalı?</h3>
+    <ul>
+      <li>Haftada 5 gün, günde bir görev yeterli. Görev başta yaklaşık 4 dakika sürer, çocuk geliştikçe 12-13 dakikaya kadar uzar.</li>
+      <li>Her gün aynı saatte, sessiz bir odada ve bildirimleri kapalı bir cihazla oynayın. Yorgun ya da aç olduğu saatleri seçmeyin.</li>
+      <li>Ölçümü haftada bir, mümkünse aynı gün ve saatte yapın. Ölçüm sırasında yardım etmeyin, sadece cesaret verin.</li>
+      <li>Molaları atlamayın. Kısa nefes ve hareket araları dikkatin toparlanmasına yardım eder.</li>
+      <li>Ekran dışında da çalışın: yapboz, "Simon der" ve "kırmızı ışık yeşil ışık" oyunları, birlikte kitap okuma, açık havada oyun ve düzenli uyku dikkati destekler.</li>
+    </ul>
+    <h3>Neye dayanıyor?</h3>
+    <ul>
+      <li><b>Ölçüm:</b> Sürekli performans ve Go/No-Go testlerine (CPT, SART) benzeyen 4 dakikalık sabit bir görev. Kaçırmalar dikkatsizliği, yanlış dokunmalar dürtüselliği, tepki değişkenliği dikkatin dengesini gösterir.</li>
+      <li><b>Çalışma:</b> Rueda ve arkadaşları (2005, PNAS) 4-6 yaş çocuklarda kısa bilgisayar alıştırmalarıyla yönetici dikkatte iyileşme buldu. Balık Sürüsü, onların çocuk dikkat testindeki balık görevine dayanır.</li>
+      <li><b>Uyarlanan zorluk:</b> Diamond ve Lee (2011, Science) yönetici işlev çalışmalarının en çok, zorluk kademeli arttığında ve çocuk düzenli, keyifle çalıştığında işe yaradığını gösterdi.</li>
+      <li><b>Molalar:</b> Doğada ya da hareketle verilen araların çocukların dikkatini toparladığı gösterildi (Faber Taylor ve Kuo, 2009).</li>
+      <li><b>Sınır:</b> Bu tür oyunlar oyundaki beceriyi iyi geliştirir. Ama sınıftaki dikkate ne kadar yansıdığı araştırmalarda tartışmalıdır (Melby-Lervåg ve Hulme, 2013). En iyi sonuç; oyunu günlük okuma, oyun, uyku ve hareketle birlikte kullanınca alınır.</li>
+    </ul>
+    <div class="warn"><b>Önemli:</b> Bu uygulama bir tanı aracı değildir ve puanlar resmi normlarla karşılaştırılamaz. Sadece çocuğun kendi gelişimini izlemek içindir. Dikkat güçlüğü okulda ve evde sürekli sorun yaratıyorsa çocuk doktoruna ya da çocuk ve ergen psikiyatristine danışın.</div>
+    <div class="backup"><b>Yedek kodu</b><span>İlerleme bu cihazda kaydedilir. Tarayıcı temizlenirse ya da başka cihaza geçerseniz bu kodla geri yükleyin.</span>
+      <textarea id="codeOut" readonly rows="3"></textarea><button class="go small" id="copyCode">Kodu kopyala</button>
+      <input id="codeIn" placeholder="Yedek kodunu buraya yapıştırın" autocomplete="off"><button class="go alt small" id="loadCode">Kodu yükle</button><div id="codeMsg" role="status"></div></div>
+    <div class="btnrow" style="margin-top:16px"><button class="go" id="closeP">Kapat</button></div>
+    <div style="text-align:center"><button class="reset" id="resetBtn">Her şeyi sıfırla</button><div id="confirmBox"></div></div>
+  </div></div>`;
+  $('#closeP').onclick = () => $('#overlay').innerHTML='';
+  $('#codeOut').value = makeCode();
+  $('#copyCode').onclick = () => { const t=$('#codeOut'); try { navigator.clipboard.writeText(t.value).then(()=>$('#codeMsg').textContent='Kopyalandı. Bir yere not edin.', ()=>{ t.select(); $('#codeMsg').textContent='Kod seçildi, kopyalayın.'; }); } catch(e){ t.select(); } };
+  $('#loadCode').onclick = () => { const d=readCode($('#codeIn').value);
+    if (!d){ $('#codeMsg').textContent='Bu kod okunamadı. ODK- ile başlayan kodun tamamını yapıştırın.'; return; }
+    save = Object.assign({sound:save.sound, blocks:save.blocks}, d); save.games = Object.assign(freshGames(), d.games||{}); persist(); renderHome(); openParent(); $('#codeMsg').textContent='İlerleme geri yüklendi.'; };
+  $('#resetBtn').onclick = () => { $('#confirmBox').innerHTML='<div class="confirm">Tüm ölçümler, günler ve stickerlar silinsin mi? <button class="go alt small" id="yes">Evet, sil</button><button class="go small" id="no">Vazgeç</button></div>';
+    $('#yes').onclick = () => { save={sound:save.sound, stars:0, stickers:[], days:[], tests:[], games:freshGames(), blocks:[]}; persist(); $('#overlay').innerHTML=''; renderHome(); };
+    $('#no').onclick = () => $('#confirmBox').innerHTML=''; };
+}
+function openAlbum(){
+  $('#overlay').innerHTML = `<div class="over"><div class="card-big"><h2>Sticker Albümüm</h2><p>${save.stickers.length} / ${STICKERS.length} sticker topladın. Her görev ve ölçüm yeni bir tane verir!</p>
+    <div class="album">${STICKERS.map(s=>save.stickers.includes(s)?`<div>${s}</div>`:'<div class="empty">?</div>').join('')}</div>
+    <div class="btnrow" style="margin-top:18px"><button class="go" id="closeA">Kapat</button></div></div></div>`;
+  $('#closeA').onclick = () => $('#overlay').innerHTML='';
+}
+
+/* ---------- efekt ---------- */
+function burst(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const fx=$('#fx'), cols=['#ffc63a','#ff7957','#7fd6b0','#8b7cf6','#fff'];
+  for (let i=0;i<22;i++){ const c=el('i'); c.style.left='50%'; c.style.top='45%'; c.style.background=rnd(cols);
+    c.style.setProperty('--dx',(Math.random()*500-250)+'px'); c.style.setProperty('--dy',(Math.random()*-320+120)+'px');
+    fx.append(c); setTimeout(()=>c.remove(),1200); }
+}
+
+/* ---------- bağla ---------- */
+$('#quitBtn').onclick = quit;
+$('#listenBtn').onclick = () => replay();
+$('#albumBtn').onclick = openAlbum;
+$('#soundBtn').onclick = () => { save.sound=!save.sound; persist(); renderHome(); if(!save.sound) hush(); else say('Ses açık!'); };
+document.addEventListener('keydown', e => { if (R && R.key) R.key(e); });
+// Ekran değişirse (başka uygulamaya geçme) blok ölçümü bozulmasın: oyunu durdur.
+document.addEventListener('visibilitychange', () => { if (document.hidden && flow){ quit(); $('#pauseNote').hidden=false; } });
+let holdT;
+const pb=$('#parentBtn');
+pb.onpointerdown = () => { pb.classList.add('hold'); holdT=setTimeout(()=>{ pb.classList.remove('hold'); openParent(); }, 1400); };
+['pointerup','pointerleave','pointercancel'].forEach(ev=>pb.addEventListener(ev,()=>{ clearTimeout(holdT); pb.classList.remove('hold'); }));
+pb.onkeydown = e => { if (e.key==='Enter') openParent(); };
+renderHome();
+</script>
+</body>
+</html>
