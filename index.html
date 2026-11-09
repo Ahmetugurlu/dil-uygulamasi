@@ -14,18 +14,18 @@
 :root{
   --sky:#e6f3ff; --paper:#ffffff; --ink:#1f2a44; --soft:#5d6a86; --line:#cfdff2;
   --sun:#ffc43d; --sun-deep:#d79a12; --go:#2fa46a; --go-deep:#1f7a4c; --rose:#ff6f91;
-  --sea:#2f8fd8; --forest:#3c9a5f; --night:#5b4bc4; --planet:#e8743b;
+  --sea:#2f8fd8; --forest:#3c9a5f; --night:#5b4bc4; --planet:#e8743b; --dino:#c0538f; --castle:#169a9c;
   --display:'Baloo 2', 'Comic Sans MS', system-ui, sans-serif;
   --body:'Andika', 'Trebuchet MS', system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --sky:#121a2e; --paper:#1c2640; --ink:#eef3ff; --soft:#a9b6d3; --line:#2e3b5c;
   --sun:#ffcf5c; --sun-deep:#b07c08; --go:#3fbb7c; --go-deep:#24865a; --rose:#ff8aa6;
-  --sea:#4aa6ec; --forest:#55b878; --night:#8a7cf0; --planet:#f08a55; color-scheme:dark }}
+  --sea:#4aa6ec; --forest:#55b878; --night:#8a7cf0; --planet:#f08a55; --dino:#e07ab0; --castle:#2bb3b5; color-scheme:dark }}
 :root[data-theme="dark"]{
   --sky:#121a2e; --paper:#1c2640; --ink:#eef3ff; --soft:#a9b6d3; --line:#2e3b5c;
   --sun:#ffcf5c; --sun-deep:#b07c08; --go:#3fbb7c; --go-deep:#24865a; --rose:#ff8aa6;
-  --sea:#4aa6ec; --forest:#55b878; --night:#8a7cf0; --planet:#f08a55; color-scheme:dark }
+  --sea:#4aa6ec; --forest:#55b878; --night:#8a7cf0; --planet:#f08a55; --dino:#e07ab0; --castle:#2bb3b5; color-scheme:dark }
 
 html,body{height:100%}
 body{background:var(--sky); color:var(--ink); font:18px/1.45 var(--body); -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none}
@@ -65,10 +65,10 @@ button:focus-visible, textarea:focus-visible{outline:4px solid var(--sea); outli
 .play:active{transform:translateY(6px); box-shadow:0 4px 0 var(--go-deep)}
 .play.trophy{background:var(--sun); box-shadow:0 10px 0 var(--sun-deep)}
 
-.free{width:100%; display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
-.tile{border:0; border-radius:26px; aspect-ratio:1; max-width:100%; font-size:min(15vw,64px); display:grid; place-items:center; color:#fff; position:relative; box-shadow:0 6px 0 rgba(0,0,0,.18)}
+.free{width:100%; display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+.tile{border:0; border-radius:26px; aspect-ratio:1; max-width:100%; font-size:min(15vw,60px); display:grid; place-items:center; color:#fff; position:relative; box-shadow:0 6px 0 rgba(0,0,0,.18)}
 .tile:active{transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,.18)}
-.tile.odak{background:var(--night)} .tile.harf{background:var(--sea)} .tile.sayi{background:var(--planet)} .tile.dikkat{background:var(--forest)}
+.tile.odak{background:var(--night)} .tile.harf{background:var(--sea)} .tile.sayi{background:var(--planet)} .tile.dikkat{background:var(--forest)} .tile.dino{background:var(--dino)} .tile.kale{background:var(--castle)}
 .tile .n{position:absolute; left:8px; bottom:6px; font:800 16px var(--display); background:rgba(0,0,0,.25); border-radius:999px; padding:0 8px; font-variant-numeric:tabular-nums}
 
 .lock{position:fixed; right:max(12px, env(safe-area-inset-right, 0px)); bottom:calc(12px + env(safe-area-inset-bottom, 0px)); width:44px; height:44px; border-radius:50%; border:2px solid var(--line); background:var(--paper); font-size:20px; opacity:.6; display:grid; place-items:center}
@@ -85,7 +85,7 @@ button:focus-visible, textarea:focus-visible{outline:4px solid var(--sea); outli
 .shelf .ic{font-size:40px; flex:none; width:56px; height:56px; border-radius:16px; display:grid; place-items:center}
 .stk{display:flex; flex-wrap:wrap; gap:6px; font-size:40px; line-height:1.2; min-width:0}
 .stk .slot{width:48px; height:48px; border-radius:12px; border:3px dashed var(--line)}
-.ic.odak{background:var(--night)} .ic.harf{background:var(--sea)} .ic.sayi{background:var(--planet)} .ic.dikkat{background:var(--forest)}
+.ic.odak{background:var(--night)} .ic.harf{background:var(--sea)} .ic.sayi{background:var(--planet)} .ic.dikkat{background:var(--forest)} .ic.dino{background:var(--dino)} .ic.kale{background:var(--castle)}
 
 .pbody{display:flex; flex-direction:column; gap:10px; font-size:16px; user-select:text; -webkit-user-select:text}
 .pbody p{margin:0}
@@ -116,7 +116,7 @@ button:focus-visible, textarea:focus-visible{outline:4px solid var(--sea); outli
 @keyframes glow{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--sun) 60%, transparent)}50%{box-shadow:0 0 0 12px color-mix(in srgb, var(--sun) 0%, transparent)}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @keyframes fill{from{box-shadow:inset 0 0 0 0 var(--sun)}to{box-shadow:inset 0 0 0 24px var(--sun); opacity:1}}
-@media (max-width:420px){ .stop{width:80px; height:80px; font-size:42px} .play{width:170px; height:170px} .free{gap:8px} }
+@media (max-width:420px){ .stop{width:80px; height:80px; font-size:42px} .play{width:170px; height:170px} .free{gap:6px} .tile{border-radius:18px} .tile .n{font-size:12px; left:4px; bottom:3px; padding:0 5px} }
 @media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} }
 </style>
 </head>
@@ -158,7 +158,7 @@ button:focus-visible, textarea:focus-visible{outline:4px solid var(--sea); outli
     <button class="close" data-close aria-label="Kapat">✖</button>
     <h2>Aile köşesi</h2>
     <div class="pbody">
-      <p>Çocuk ekranı yazısızdır; Tan her adımı sesli söyler. Her gün yeşil OYNA düğmesi sırayla üç durağa götürür: önce Odak Kampı (dikkat), sonra Harf Macerası, sonra Sayı Gezegeni. Her durak 4 dakika; süre dolunca ev düğmesi yeşil yanar ve Tan sıradakine çağırır. Alttaki dört resimle her oyun serbestçe açılabilir. Oyunların kendi ebeveyn panelleri ve ölçüm grafikleri oyunların içinde duruyor.</p>
+      <p>Çocuk ekranı yazısızdır; Tan her adımı sesli söyler. Her gün yeşil OYNA düğmesi sırayla dört durağa götürür: önce Odak Kampı (dikkat), sonra Hafıza Kalesi (uzayan odak turları + önceki hece ve kelimelerin aralıklı tekrarı + anlayarak okuma), sonra Dino Vadisi (okuma), sonra Sayı Gezegeni. Her durak 4 dakika; süre dolunca ev düğmesi yeşil yanar ve Tan sıradakine çağırır. Hafıza Kalesi’nin ayrıntılı ilerleme grafiği kendi içindeki 🔒 köşesindedir. Alttaki altı resimle (Harf Macerası ve Dikkat Ormanı dahil) her oyun serbestçe açılabilir. Oyunların kendi ebeveyn panelleri ve ölçüm grafikleri oyunların içinde duruyor.</p>
       <p><b>Bu hafta oyun süresi</b> (dakika)</p>
       <div class="minutes" id="minutes"></div>
       <p><b>Yedek kodu</b>: tüm oyunların yıldızları, çıkartmaları ve dikkat ölçümleri bu tek kodda. Saklayın; başka cihazda buraya yapıştırıp “Geri yükle”ye basın.</p>
@@ -167,7 +167,7 @@ button:focus-visible, textarea:focus-visible{outline:4px solid var(--sea); outli
       <label for="restore"><b>Kodu geri yükle</b></label>
       <textarea id="restore" placeholder="SEZEN- ile başlayan kodu buraya yapıştırın"></textarea>
       <div class="row"><button class="btn ghost" id="restoreBtn">Geri yükle</button><span id="restoreAsk" hidden>Bu cihazdaki ilerlemenin yerine geçecek. Emin misiniz? <button class="btn warn" id="restoreYes">Evet, yükle</button> <button class="btn ghost" id="restoreNo">Vazgeç</button></span><span class="msg" id="restoreMsg"></span></div>
-      <p style="color:var(--soft)">Eski tek tek kodlar (TAN-, DKT-, ODK-, ROBI-) ilgili oyunun kendi albümünden yüklenebilir.</p>
+      <p style="color:var(--soft)">Eski tek tek kodlar (TAN-, DNO-, KLE-, DKT-, ODK-, ROBI-) ilgili oyunun kendi albümünden yüklenebilir.</p>
     </div>
   </div>
 </div>
@@ -189,11 +189,13 @@ const GOAL_SEC = 4*60;   // durak başına günlük hedef
 // key = her oyunun kendi localStorage anahtarı
 const LANDS = [
   {id:'odak',   file:'apps/odak.html',   key:'odak-kampi-v1',    icon:'🚀', name:'Odak Kampı',    go:'Roketine bin, Odak Kampı’na gidiyoruz!', stars:s=>+s.stars||0},
+  {id:'kale',   file:'apps/kale.html',   key:'hafiza-kalesi-v1', icon:'🏰', name:'Hafıza Kalesi', go:'Hafıza Kalesi’ne gidiyoruz!',         stars:s=>+s.stars||0},
   {id:'harf',   file:'apps/harf.html',   key:'anetil-macera-v1', icon:'🦊', name:'Harf Macerası', go:'Harf adalarına gidiyoruz!',              stars:s=>sum(s.stars)},
   {id:'sayi',   file:'apps/sayi.html',   key:'sayi-gezegeni-v1', icon:'🤖', name:'Sayı Gezegeni', go:'Robi seni Sayı Gezegeni’nde bekliyor!', stars:s=>sum(s.stars)},
+  {id:'dino',   file:'apps/dino.html',   key:'harf-dino-v1',     icon:'🦕', name:'Dino Vadisi',   go:'Dino Vadisi’ne gidiyoruz!',             stars:s=>sum(s.stars)},
   {id:'dikkat', file:'apps/dikkat.html', key:'dikkat-macera-v1', icon:'🌳', name:'Dikkat Ormanı', go:'Dikkat Ormanı’na gidiyoruz!',           stars:s=>sum(s.stars)},
 ];
-const ROUTE = ['odak','harf','sayi'];   // öncelik dikkat süresi
+const ROUTE = ['odak','kale','dino','sayi'];   // öncelik dikkat süresi; Hafıza Kalesi = uzayan odak turları + aralıklı hece/kelime tekrarı
 const PRAISE = ['Aferin '+CHILD+'!','Harikasın '+CHILD+'!','Süpersin '+CHILD+'!','Bravo '+CHILD+'!'];
 
 const $ = s => document.querySelector(s);
@@ -364,5 +366,6 @@ window.addEventListener('pagehide', saveHub);
 renderHome();
 { const id=location.hash.slice(1); if (byId(id)) openLand(id); }
 </script>
+
 </body>
 </html>
